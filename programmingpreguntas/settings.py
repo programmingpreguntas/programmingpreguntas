@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 
 import os
 import dj_database_url
+import logging
+
+logging.basicConfig(filename='example.log',level=logging.DEBUG)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -80,7 +83,16 @@ WSGI_APPLICATION = 'programmingpreguntas.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
-DATABASES = {'default': {}}
+DATABASES = {
+    'default': {
+        "ENGINE": 'django.db.backends.postgresql',
+        "NAME": 'alexchescheir',
+        "USER": 'alexchescheir',
+        "PASSWORD": "",
+        "HOST": '127.0.0.1',
+        "PORT": '5432',
+    }
+}
 
 AUTH_PASSWORD_VALIDATORS = (
     {
@@ -108,7 +120,9 @@ USE_TZ = True
 
 # Update database configuration with $DATABASE_URL.
 db_from_env = dj_database_url.config(conn_max_age=500)
-DATABASES['default'].update(db_from_env)
+# DATABASES['default'].update(db_from_env)
+
+logging.debug(DATABASES)
 
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
