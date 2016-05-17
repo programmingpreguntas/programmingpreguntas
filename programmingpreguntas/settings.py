@@ -85,14 +85,19 @@ WSGI_APPLICATION = 'programmingpreguntas.wsgi.application'
 
 DATABASES = {
     'default': {
-        "ENGINE": 'django.db.backends.postgresql',
-        "NAME": 'alexchescheir',
-        "USER": 'alexchescheir',
-        "PASSWORD": "",
-        "HOST": '127.0.0.1',
-        "PORT": '5432',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'question_box',
+        'USER': 'Pipita',
+        'PASSWORD' : '',
+        'HOST' : '127.0.0.1',
+        'PORT' : '5432',
     }
 }
+
+
+
+
+
 
 AUTH_PASSWORD_VALIDATORS = (
     {
