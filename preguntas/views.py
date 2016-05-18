@@ -10,6 +10,7 @@ class QuestionViewSet(viewsets.ModelViewSet):
     """
     queryset = Question.objects.all().order_by('created')
     serializer_class = QuestionSerializer
+    print("HELLO THIS IS ALEX")
 
 
 class AnswerViewSet(viewsets.ModelViewSet):
