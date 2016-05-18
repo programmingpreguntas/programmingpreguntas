@@ -15,4 +15,4 @@ class AnswerSerializer(serializers.HyperlinkedModelSerializer):
 class UsuarioSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Usuario
-        fields = "__all__"
+        exclude = ('user',)
