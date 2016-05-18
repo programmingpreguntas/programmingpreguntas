@@ -23,7 +23,7 @@ class Question(models.Model):
 
 class Answer(models.Model):
     body = models.TextField()
-    upvotes = models.ManyToManyField(Usuario, related_name='answer_voted_rp')
+    upvotes = models.ManyToManyField(Usuario, related_name='answer_voted_up')
     created = models.DateTimeField(auto_now_add=True)
     owner = models.ForeignKey(Usuario)
     question = models.ForeignKey(Question)
