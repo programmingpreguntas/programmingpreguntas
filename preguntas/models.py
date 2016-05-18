@@ -13,7 +13,7 @@ class Usuario(models.Model):
 class Question(models.Model):
     title = models.CharField(max_length=255)
     body = models.TextField()
-    upvotes = models.ManyToManyField(Usuario, related_name='question_voted_on')
+    upvotes = models.ManyToManyField(Usuario, related_name='question_voted_up')
     created = models.DateTimeField(auto_now_add=True)
     owner = models.ForeignKey(Usuario)
 
@@ -23,7 +23,7 @@ class Question(models.Model):
 
 class Answer(models.Model):
     body = models.TextField()
-    upvotes = models.ManyToManyField(Usuario, related_name='answer_voted_on')
+    upvotes = models.ManyToManyField(Usuario, related_name='answer_voted_up')
     created = models.DateTimeField(auto_now_add=True)
     owner = models.ForeignKey(Usuario)
     question = models.ForeignKey(Question)
