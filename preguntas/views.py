@@ -35,3 +35,9 @@ class UsuarioViewSet(viewsets.ModelViewSet):
     """
     queryset = Usuario.objects.all().order_by('name')
     serializer_class = UsuarioSerializer
+
+class BreakViewSet(viewsets.ModelViewSet):
+    breaktribute = 'break'
+
+    def breaky_break(self):
+        print('Break')
