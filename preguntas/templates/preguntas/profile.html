@@ -1,13 +1,13 @@
-<!-- {% if user.is_authenticated %} -->
+
 Hello {{usuario.name}}!
 
 {% if question_set %}
 <div class="question_set">
     <ul>
         {% for question in question_set %}
-        {% with question_id=question.id %}
-        <li>{{question}}</li>
-        {% endwith %}
+            {% with question_id=question.id %}
+            <li>{{question}}</li>
+            {% endwith %}
         {% endfor %}
     </ul>
 </div>
@@ -24,4 +24,3 @@ Hello {{usuario.name}}!
 </ul>
 </div>
 {% endif %}
-<!-- {% endif %} -->
