@@ -1,0 +1,27 @@
+{% if user.is_authenticated %}
+Hello {{usuario.name}}!
+
+{% if question_set %}
+<div class="question_set">
+    <ul>
+        {% for question in question_set %}
+        {% with question_id=question.id %}
+        <li><a href="{% url 'preguntas:question' question_id %}">{{question}}</a></li>
+        {% endwith %}
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+{% if questions_answered_set %}
+<div class="questions_answered_set">
+<ul>
+    {% for answer in questions_answered_set %}
+    {% with answer_id=answer.id %}
+    <li><a href="{% url 'preguntas:answer' answer_id %}">{{answer}}</a></li>
+    {% endwith %}
+    {% endfor %}
+</ul>
+</div>
+{% endif %}
+{% endif %}
