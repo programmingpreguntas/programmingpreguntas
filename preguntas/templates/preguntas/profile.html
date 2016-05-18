@@ -1,4 +1,4 @@
-{% if user.is_authenticated %}
+<!-- {% if user.is_authenticated %} -->
 Hello {{usuario.name}}!
 
 {% if question_set %}
@@ -6,7 +6,7 @@ Hello {{usuario.name}}!
     <ul>
         {% for question in question_set %}
         {% with question_id=question.id %}
-        <li><a href="{% url 'preguntas:question' question_id %}">{{question}}</a></li>
+        <li>{{question}}</li>
         {% endwith %}
         {% endfor %}
     </ul>
@@ -18,10 +18,10 @@ Hello {{usuario.name}}!
 <ul>
     {% for answer in questions_answered_set %}
     {% with answer_id=answer.id %}
-    <li><a href="{% url 'preguntas:answer' answer_id %}">{{answer}}</a></li>
+    <li>{{answer}}</li>
     {% endwith %}
     {% endfor %}
 </ul>
 </div>
 {% endif %}
-{% endif %}
+<!-- {% endif %} -->
