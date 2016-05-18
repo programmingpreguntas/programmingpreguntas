@@ -1,0 +1,10 @@
+<h2>Most Recent Questions</h2>
+{% if top_list %}
+<ul>
+  {% for question in top_list %}
+  <li> <a href="programmingpreguntas/questions/{{ question.id }}">{{ question.id }}</a></li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>No questions are available</p>
+{% endif %}
