@@ -9,10 +9,10 @@ class QuestionSerializer(serializers.HyperlinkedModelSerializer):
 
 class AnswerSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = Question
+        model = Answer
         fields = "__all__"
 
 class UsuarioSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = Question
-        fields = "__all__"
+        model = Usuario
+        exclude = ('user',)
