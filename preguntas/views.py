@@ -71,5 +71,6 @@ def login_user(request):
             state = "Your username and/or password were incorrect."
             # return redirect()
 
-    context = {'state':state, 'username': username}
-    return render(request, 'preguntas_box/login.html', {'state':state, 'username': username})
+
+    context = {'state': state, 'username': username}
+    return render(request, 'preguntas_box/login.html', context)

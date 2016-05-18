@@ -7,10 +7,12 @@ class QuestionSerializer(serializers.HyperlinkedModelSerializer):
         model = Question
         fields = "__all__"
 
+
 class AnswerSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Answer
         fields = "__all__"
+
 
 class UsuarioSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
