@@ -43,8 +43,8 @@ class UsuarioViewSet(viewsets.ModelViewSet):
 
 
 def index(request):
-
-    return render(request, 'preguntas_box/index.html')
+    top_list = Question.objects.all()[:20]
+    return render(request, 'preguntas/question_page.html', {'top_list': top_list})
 
 
 def login_user(request):
@@ -71,5 +71,6 @@ def login_user(request):
             state = "Your username and/or password were incorrect."
             # return redirect()
 
-    context = {'state':state, 'username': username}
-    return render(request, 'preguntas_box/auth.html', {'state':state, 'username': username})
+
+    context = {'state': state, 'username': username}
+    return render(request, 'preguntas_box/login.html', context)
