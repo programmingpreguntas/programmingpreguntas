@@ -19,7 +19,6 @@ class QuestionViewSet(viewsets.ModelViewSet):
     """
     queryset = Question.objects.all().order_by('created')
     serializer_class = QuestionSerializer
-    print("HELLO THIS IS ALEX")
 
 
 class AnswerViewSet(viewsets.ModelViewSet):
@@ -36,9 +35,3 @@ class UsuarioViewSet(viewsets.ModelViewSet):
     """
     queryset = Usuario.objects.all().order_by('name')
     serializer_class = UsuarioSerializer
-
-class BreakViewSet(viewsets.ModelViewSet):
-    breaktribute = 'break'
-
-    def breaky_break(self):
-        print('Break')
