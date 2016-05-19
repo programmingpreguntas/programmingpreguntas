@@ -1,0 +1,32 @@
+<h2>Most Recent Questions</h2>
+
+{% if question_list %}
+<ul>
+  {% for question in question_list %}
+  <li> <a href="preguntas/questions/{{ question.id }}">{{ question }}</a></li>
+  {% endfor %}
+</ul>
+<span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+{% else %}
+<p>No questions are available</p>
+{% endif %}
+<form id="loginButton" action="/preguntas/login.html" method="get">
+  <input type="submit" name="name" value="Login">
+</form>
+
+<form id="searchBar" action="/preguntas/search_questions/" method="get">
+  <input type="text" name="q" value="Search Questions">
+  <input type="submit" name="name" value="Search">
+</form>
