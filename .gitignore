@@ -65,6 +65,7 @@ target/
 #Ipython Notebook
 .ipynb_checkpoints
 .envrc
+
 .direnv
 .DS_Store
 .env

@@ -32,9 +32,11 @@ def make_username():
 
 def make_random_user():
     try:
-        User.objects.create_user(username=make_username(), password="password123")
+        User.objects.create_user(username=make_username(),
+                                 password="password123")
     except IntegrityError:
         make_random_user()
+
 
 
 def make_random_users(num):
@@ -69,15 +71,18 @@ def make_random_answers():
                 continue
 
 
+
 def make_random_votes():
     number_of_questions = Question.objects.count()
     number_of_answers = Answer.objects.count()
     for each_usuario in Usuario.objects.all():
         for _ in range(random.randint(0, 50)):
-            this_question = Question.objects.all()[random.randint(0, number_of_questions-1)]
+            this_question_index = random.randint(0, number_of_questions-1)
+            this_question = Question.objects.all()[this_question_index]
             this_question.upvotes.add(each_usuario)
         for _ in range(random.randint(0, 200)):
-            this_answer = Answer.objects.all()[random.randint(0, number_of_answers-1)]
+            this_answer_index = random.randint(0, number_of_answers-1)
+            this_answer = Answer.objects.all()[this_answer_index]
             this_answer.upvotes.add(each_usuario)
 
 

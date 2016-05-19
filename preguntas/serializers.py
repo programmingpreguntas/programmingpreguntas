@@ -17,4 +17,4 @@ class AnswerSerializer(serializers.HyperlinkedModelSerializer):
 class UsuarioSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Usuario
-        exclude = ('user')
+        exclude = ('user',)
