@@ -4,7 +4,7 @@ Ask a <a href="{% url 'preguntas:new_question' %}">New Question</a>
 {% if question_list %}
 <ul>
   {% for question in question_list %}
-  <li> <a href="preguntas/questions/{{ question.id }}">{{ question }}</a></li>
+  <li> <a href="/preguntas/questions/{{ question.id }}">{{ question }}</a></li>
   {% endfor %}
 </ul>
 <span class="step-links">
