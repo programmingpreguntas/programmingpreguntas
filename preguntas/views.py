@@ -86,7 +86,7 @@ class UsuarioViewSet(viewsets.ModelViewSet):
 
 def index(request):
     context = {}
-    top_list = Question.objects.all().order_by('-created')[:20]
+    question_list = Question.objects.all().order_by('-created')[:20]
     try:
         terms = request.GET['search']
         context['terms'] = terms
@@ -94,7 +94,7 @@ def index(request):
         context['found_questions'] = found_questions
     except KeyError:
         pass
-    context['top_list'] = top_list
+    context['question_list'] = question_list
     return render(request, 'preguntas/question_list.html', context)
 
 
