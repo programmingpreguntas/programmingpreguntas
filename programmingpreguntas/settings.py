@@ -63,7 +63,9 @@ ROOT_URLCONF = 'programmingpreguntas.urls'
 TEMPLATES = (
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'preguntas/templates/preguntas_box'),
+                os.path.join(BASE_DIR, 'preguntas/templates/preguntas]'),
+                ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -84,12 +86,18 @@ WSGI_APPLICATION = 'programmingpreguntas.wsgi.application'
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
 DATABASES = {
-    'default': {}
+
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'Pipita',
+        'USER': 'Pipita',
+        'PASSWORD' : '',
+        'HOST' : '127.0.0.1',
+        'PORT' : '5432',
+    }
 }
 
-AUTH_PASSWORD_VALIDATORS = (
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+AUTH_PASSWORD_VALIDATORS = ({'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',

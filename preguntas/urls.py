@@ -10,5 +10,6 @@ urlpatterns = [
     url(r'^questions/$', views.QuestionList.as_view(), name='questions'),
     url(r'^login/$', views.login_user, name='login'),
     url(r'^search_questions/', views.search, name='search'),
-    # url(r'^questions/?P<question_id>[0-9]+)/$', views.question, name='question'),
+    url(r'^login/auth_view/$', views.auth_view, name='auth'),
+
 ]

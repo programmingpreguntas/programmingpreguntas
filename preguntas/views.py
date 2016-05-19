@@ -9,7 +9,10 @@ from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.views.generic import ListView
 from .utilities import get_query
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib import auth
+from django.core.context_processors import csrf
+
 
 
 def profile(request, usuario_id):
@@ -80,29 +83,33 @@ def index(request):
     return render(request, 'preguntas/question_page.html', {'top_list': top_list})
 
 
+
 def login_user(request):
-    state = "Please log in below..."
-    username = password = ''
+    c = {}
+    c.update(csrf(request))
+    return render_to_response('login.html', c)
 
-    if request.POST:
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+def auth_view(request):
+    username = request.POST.get('username', '')
+    password = request.POST.get('password', '')
+    user = auth.authenticate(username=username, password=password)
 
-        user = authenticate(username=username, password=password)
-        print(request.POST)
-
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                state = "You're successfully logged in!"
-                # return redirect()
-
-            else:
-                state = "Your account is not active, please contact the site admin."
-                # return redirect()
-        else:
-            state = "Your username and/or password were incorrect."
+    if user is not None:
+        if user.is_active:
+            login(request, user)
+            state = "You're successfully logged in!"
+            return HttpResponse(state)
             # return redirect()
 
-    context = {'state': state, 'username': username}
-    return render(request, 'preguntas_box/login.html', context)
+        else:
+            state = "Your account is not active, please contact the site admin."
+            # context = {'errors': [state]}
+
+            return HttpResponse(state)
+            # return redirect()
+    else:
+        state = "Your username and/or password were incorrect."
+        context = {'errors': [state]}
+        return render(request, 'login.html', context)
+        #return HttpResponse(state)
+        # return redirect()

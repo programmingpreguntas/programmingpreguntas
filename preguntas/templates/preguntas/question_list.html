@@ -22,8 +22,8 @@
 {% else %}
 <p>No questions are available</p>
 {% endif %}
-<form id="loginButton" action="/preguntas/login.html" method="get">
-  <input type="submit" name="name" value="Login">
+<form action="{% url 'preguntas:login' %}">
+    <input type="submit" value="Users Log in">
 </form>
 
 <form id="searchBar" action="/preguntas/search_questions/" method="get">
