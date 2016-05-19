@@ -7,6 +7,7 @@ from django.template import loader
 from django.shortcuts import render_to_response
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
+from .forms import AnswerForm, QuestionForm
 
 
 def profile(request, usuario_id):
@@ -73,3 +74,25 @@ def login_user(request):
 
     context = {'state':state, 'username': username}
     return render(request, 'preguntas_box/login.html', {'state':state, 'username': username})
+
+
+def question_detail(request, question_id):
+    if request.method == 'POST':
+        form = AnswerForm(request.POST)
+        if form.is_valid():
+            answer = form.save(commit=False)
+            answer.question = Question.objects.get(id=question_id)
+            answer.owner = Usuario.objects.get(id=request.user.usuario.user_id)
+            answer.save()
+            return question_detail(request, question_id)
+        else:
+            print(form.errors)
+    else:
+        # If the request was not a POST, display the form to enter details.
+        form = AnswerForm()
+    question = Question.objects.get(id=question_id)
+    answers = Answer.objects.filter(question_id=question.id)
+    context = {'form': form,
+               'question': question,
+               'answers': answers}
+    return render(request, 'movie_recommender/rate_movie.html', context)

@@ -1,10 +1,44 @@
+<head>
+    <title>Question {{question.id}}</title>
+</head>
+<body>
 <p>
 Question # {{question.id}}
 </p>
 <p>
-    Title: {{question.title}}
+    <h2>Title: {{question.title}}</h2>
 </p>
 
 <p>
     {{question.body}}
 </p>
+{% if answers %}
+<p>
+    <h3>Answer(s):</h3>
+</p>
+    {% for answer in answers %}
+    <p>
+        {answer.body}
+    </p>
+    <p>
+        By {answer.owner} on {answer.created}.
+    </p>
+    {% endfor %}
+{% endif %}
+
+<form id="AnswerForm" method="post" action="">
+
+            {% csrf_token %}
+            {% for hidden in form.hidden_fields %}
+                {{ hidden }}
+            {% endfor %}
+
+            {% for field in form.visible_fields %}
+                {{ field.errors }}
+                {{ field.help_text }}
+                {{ field }}
+            {% endfor %}
+
+            <input type="submit" name="submit" value="Add Answer" />
+        </form>
+</body>
