@@ -9,6 +9,7 @@ from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.views.generic import ListView
 from .utilities import get_query
+from django.http import HttpResponse
 
 
 def profile(request, usuario_id):
@@ -21,14 +22,19 @@ def profile(request, usuario_id):
 
 
 class QuestionList(ListView):
-        model = Question
-        paginate_by = 25
+    model = Question
+    paginate_by = 25
 
+    def get_queryset(self):
+        if 'queryset' in self.kwargs:
+            return self.kwargs['queryset']
+        else:
+            return super(ListView, self).get_queryset()
 
 # Search copied from http://julienphalip.com/post/2825034077/adding-search-to-a-django-site-in-a-snap
 def search(request):
     query_string = ''
-    found_questions = None
+    found_questions = []
     if ('q' in request.GET) and request.GET['q'].strip():
         query_string = request.GET['q']
         question_query = get_query(query_string, ['title', 'body', ])
@@ -37,7 +43,9 @@ def search(request):
         #            'query_string': query_string,
         #            'found_questions': found_questions
         #            }
-    return QuestionList.as_view(queryset=found_questions)
+    # return HttpResponse("Searched for " + query_string +
+    #                     " found " + str(len(found_questions)) + " questions.")
+    return QuestionList.as_view()(request, queryset=found_questions)
     # return render(request, 'search/search_results.html',
     #               context=context)
 
