@@ -63,8 +63,8 @@ ROOT_URLCONF = 'programmingpreguntas.urls'
 TEMPLATES = (
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['/Users/Pipita/programmingpreguntas/preguntas/templates/preguntas_box',
-                '/Users/Pipita/programmingpreguntas/preguntas/templates/preguntas]',
+        'DIRS': [os.path.join(BASE_DIR, 'preguntas/templates/preguntas_box'),
+                os.path.join(BASE_DIR, 'preguntas/templates/preguntas]'),
                 ],
         'APP_DIRS': True,
         'OPTIONS': {

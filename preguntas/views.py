@@ -70,9 +70,13 @@ def auth_view(request):
 
         else:
             state = "Your account is not active, please contact the site admin."
+            # context = {'errors': [state]}
+
             return HttpResponse(state)
             # return redirect()
     else:
         state = "Your username and/or password were incorrect."
-        return HttpResponse(state)
+        context = {'errors': [state]}
+        return render(request, 'login.html', context)
+        #return HttpResponse(state)
         # return redirect()
