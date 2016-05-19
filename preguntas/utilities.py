@@ -37,9 +37,7 @@ def make_random_user():
     try:
         User.objects.create_user(username=make_username(),
                                  password="password123")
-    except psyIntegrityError:
-        make_random_user()
-    except djaIntegrityError:
+    except (psyIntegrityError, djaIntegrityError):
         make_random_user()
 
 
@@ -71,7 +69,7 @@ def make_random_answers():
                        question=each_question,
                        owner=Usuario.objects.all()[random.randint(0, number_of_usuarios-1)]
                        ).save()
-            except psyIntegrityError, djaIntegrityError:
+            except (psyIntegrityError, djaIntegrityError):
                 continue
 
 
