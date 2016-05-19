@@ -2,7 +2,8 @@ import random
 import string
 from .models import Question, Answer, Usuario
 from django.contrib.auth.models import User
-from psycopg2 import IntegrityError
+from psycopg2 import IntegrityError as psyIntegrityError
+from django.db.utils import IntegrityError as djaIntegrityError
 
 
 RANDOM_TEXT = open("preguntas/lorem.txt", "r").read()
@@ -34,9 +35,10 @@ def make_random_user():
     try:
         User.objects.create_user(username=make_username(),
                                  password="password123")
-    except IntegrityError:
+    except psyIntegrityError:
         make_random_user()
-
+    except djaIntegrityError:
+        make_random_user()
 
 
 def make_random_users(num):
