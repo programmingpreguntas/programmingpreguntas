@@ -31,6 +31,7 @@ class QuestionList(ListView):
         else:
             return super(ListView, self).get_queryset()
 
+
 # Search copied from http://julienphalip.com/post/2825034077/adding-search-to-a-django-site-in-a-snap
 def search(request):
     query_string = ''
