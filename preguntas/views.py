@@ -16,7 +16,7 @@ def profile(request, usuario_id):
     question_set = Question.objects.filter(owner_id=usuario_id)
     questions_answered_set = Answer.objects.filter(owner_id=usuario_id)
     try:
-        date= request.GET['date']
+        date = request.GET['date']
         if date:
             questions_answered_set = questions_answered_set.order_by('-created')
     except KeyError:
@@ -61,7 +61,7 @@ def index(request):
     except KeyError:
         pass
     context['top_list'] = top_list
-    return render(request, 'preguntas/question_page.html', context)
+    return render(request, 'preguntas/question_list.html', context)
 
 
 def login_user(request):
