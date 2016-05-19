@@ -11,6 +11,7 @@ router.register(r'usuarios', views.UsuarioViewSet)
 urlpatterns = [
     # Examples:
     # url(r'^$', 'programmingpreguntas.views.home', name='home'),
+    #url(r'^$', include('preguntas.urls')),
     url(r'^preguntas/', include('preguntas.urls')),
     url(r'^api/', include(router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),

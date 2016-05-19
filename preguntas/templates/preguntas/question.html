@@ -1,10 +1,49 @@
+<head>
+    <title>Question {{question.id}}</title>
+</head>
+<body>
+<p>
+    Go <a href="/preguntas/">Home</a>
+</p>
 <p>
 Question # {{question.id}}
 </p>
 <p>
-    Title: {{question.title}}
+    <h2>Title: {{question.title}}</h2>
 </p>
 
 <p>
     {{question.body}}
 </p>
+{% if answers %}
+<p>
+    <h3>Answer(s):</h3>
+</p>
+    {% for answer in answers %}
+    <p>
+        {{answer.body}}
+    </p>
+    <p>
+        By <a href="/preguntas/profile/{{answer.owner_id}}">{{answer.owner}}</a> on {{answer.created}}.
+    </p>
+    {% endfor %}
+{% endif %}
+
+<form id="AnswerForm" method="post" action="">
+
+            {% csrf_token %}
+            {% for hidden in form.hidden_fields %}
+                {{ hidden }}
+            {% endfor %}
+
+            {% for field in form.visible_fields %}
+                {{ field.errors }}
+                {{ field.help_text }}
+                <p>
+                    {{ field }}
+                </p>
+            {% endfor %}
+
+            <input type="submit" name="submit" value="Add Answer" />
+        </form>
+</body>

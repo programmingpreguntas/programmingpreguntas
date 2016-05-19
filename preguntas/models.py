@@ -28,5 +28,8 @@ class Answer(models.Model):
     owner = models.ForeignKey(Usuario)
     question = models.ForeignKey(Question)
 
+    class Meta:
+        unique_together = ('owner', 'question')
+
     def __str__(self):
         return self.body[:50]
