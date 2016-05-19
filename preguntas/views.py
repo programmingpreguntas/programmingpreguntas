@@ -21,8 +21,8 @@ def profile(request, usuario_id):
 
 
 class QuestionList(ListView):
-    model = Question
-    paginate_by = 25
+        model = Question
+        paginate_by = 25
 
 
 # Search copied from http://julienphalip.com/post/2825034077/adding-search-to-a-django-site-in-a-snap
