@@ -1,12 +1,15 @@
 
 Hello {{usuario.name}}!
-
+<p>
+    Ask <a href="{% url 'preguntas:new_question' %}">New Question</a>.
+</p>
 {% if question_set %}
 <div class="question_set">
+    <h3>Questions Asked</h3>
     <ul>
         {% for question in question_set %}
             {% with question_id=question.id %}
-            <li>{{question}}</li>
+            <li><a href="/preguntas/question/{{question.id}}">{{question}}</a></li>
             {% endwith %}
         {% endfor %}
     </ul>
@@ -15,10 +18,11 @@ Hello {{usuario.name}}!
 
 {% if questions_answered_set %}
 <div class="questions_answered_set">
+    <h3>Question Answered</h3>
 <ul>
     {% for answer in questions_answered_set %}
-    {% with answer_id=answer.id %}
-    <li>{{answer}}</li>
+    {% with answer_question_id=answer.question_id %}
+    <li><a href="/preguntas/question/{{answer.question_id}}">{{answer}}</a></li>
     {% endwith %}
     {% endfor %}
 </ul>

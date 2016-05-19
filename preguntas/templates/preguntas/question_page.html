@@ -1,8 +1,9 @@
+Ask <a href="{% url 'preguntas:new_question' %}">New Question</a>.
 <h2>Most Recent Questions</h2>
 {% if top_list %}
 <ul>
   {% for question in top_list %}
-  <li> <a href="preguntas/questions/{{ question.id }}">{{ question }}</a></li>
+  <li> <a href="question/{{ question.id }}">{{ question }}</a></li>
   {% endfor %}
 </ul>
 {% else %}

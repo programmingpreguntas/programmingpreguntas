@@ -3,6 +3,9 @@
 </head>
 <body>
 <p>
+    Go <a href="/preguntas/">Home</a>
+</p>
+<p>
 Question # {{question.id}}
 </p>
 <p>
@@ -18,10 +21,10 @@ Question # {{question.id}}
 </p>
     {% for answer in answers %}
     <p>
-        {answer.body}
+        {{answer.body}}
     </p>
     <p>
-        By {answer.owner} on {answer.created}.
+        By <a href="/preguntas/profile/{{answer.owner_id}}">{{answer.owner}}</a> on {{answer.created}}.
     </p>
     {% endfor %}
 {% endif %}

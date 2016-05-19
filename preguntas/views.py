@@ -1,9 +1,10 @@
+import uuid
 from django.shortcuts import render, get_object_or_404
 from rest_framework import viewsets
 from .models import Question, Answer, Usuario
 from .serializers import QuestionSerializer, AnswerSerializer, UsuarioSerializer
 from django.contrib.auth import authenticate, login
-from django.template import loader
+from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
@@ -75,6 +76,9 @@ def login_user(request):
     context = {'state':state, 'username': username}
     return render(request, 'preguntas_box/login.html', {'state':state, 'username': username})
 
+def question_redirect(request, question_id):
+    url = '/preguntas/question/{}/'.format(question_id)
+    return HttpResponseRedirect(url)
 
 def question_detail(request, question_id):
     if request.method == 'POST':
@@ -82,9 +86,12 @@ def question_detail(request, question_id):
         if form.is_valid():
             answer = form.save(commit=False)
             answer.question = Question.objects.get(id=question_id)
-            answer.owner = Usuario.objects.get(id=request.user.usuario.user_id)
+            try:
+                answer.owner = Usuario.objects.get(id=request.user.usuario.id)
+            except AttributeError:
+                answer.owner = Usuario.objects.get(id=163) # if anon user, make it user 163 for now.
             answer.save()
-            return question_detail(request, question_id)
+            return question_redirect(request, question_id)
         else:
             print(form.errors)
     else:
@@ -95,4 +102,22 @@ def question_detail(request, question_id):
     context = {'form': form,
                'question': question,
                'answers': answers}
-    return render(request, 'movie_recommender/rate_movie.html', context)
+    return render(request, 'preguntas/question.html', context)
+
+def new_question(request):
+    if request.method == 'POST':
+        form = QuestionForm(request.POST)
+        if form.is_valid():
+            question = form.save(commit=False)
+            try:
+                question.owner = Usuario.objects.get(id=request.user.usuario.id)
+            except AttributeError:
+                question.owner = Usuario.objects.get(id=163) # if anon user, make it user 163 for now.
+            question.save()
+            return question_redirect(request, question.id)
+        else:
+            print(form.errors)
+    else:
+        form = QuestionForm()
+        context = {'form': form}
+        return render(request, 'preguntas/new_question.html', context)
