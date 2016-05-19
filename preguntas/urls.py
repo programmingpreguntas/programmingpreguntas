@@ -9,4 +9,5 @@ urlpatterns = [
     url(r'^profile/(?P<usuario_id>[0-9]+)/$', views.profile, name='profile'),
     # url(r'^questions/?P<question_id>[0-9]+)/$', views.question, name='question'),
     url(r'^login/$', views.login_user, name='login'),
+    url(r'^login/auth_view/$', views.auth_view, name='auth'),
 ]

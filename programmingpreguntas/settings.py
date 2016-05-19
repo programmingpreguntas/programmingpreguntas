@@ -63,7 +63,9 @@ ROOT_URLCONF = 'programmingpreguntas.urls'
 TEMPLATES = (
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['/Users/Pipita/programmingpreguntas/preguntas/templates/preguntas_box',
+                '/Users/Pipita/programmingpreguntas/preguntas/templates/preguntas]',
+                ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -87,17 +89,15 @@ DATABASES = {
 
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'question_box',
+        'NAME': 'Pipita',
         'USER': 'Pipita',
         'PASSWORD' : '',
         'HOST' : '127.0.0.1',
         'PORT' : '5432',
     }
+}
 
-
-AUTH_PASSWORD_VALIDATORS = (
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+AUTH_PASSWORD_VALIDATORS = ({'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',

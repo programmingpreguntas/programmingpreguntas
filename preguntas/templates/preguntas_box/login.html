@@ -1,15 +1,16 @@
 
-<head>
-	<title>Log in</title>
-	<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-	<style>
-	body{
-		font-family:Arial,Helvetica,sans-serif;
-		font-size: 12px;
-	}
-	</style>
-</head>
-<body>
-	{% include 'preguntas_box/login_form.html' %}
+	{% if form.errors %}
 
-</body>
+		<p class='error'> Sorry, that's not a valid username or password' </p>
+	{% endif %}
+
+	<form action="{% url 'preguntas:auth' %}" method="post"> {% csrf_token %}
+
+		<label for="username">username:</label>
+		<input type="text" name="username" value="" id="username" /><br />
+
+		<label for="username">password:</label>
+		<input type="password" name="password" value="" id="password"/><br />
+
+		<input type="submit" value="Log In"/>
+	</form>
