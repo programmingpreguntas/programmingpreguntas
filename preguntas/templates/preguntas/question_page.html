@@ -1,4 +1,11 @@
 Ask <a href="{% url 'preguntas:new_question' %}">New Question</a>.
+
+{% if found_questions %}
+<h2>Search results for: {{terms}}</h2>
+{% for question in found_questions %}
+<li> <a href="question/{{ question.id }}">{{ question }}</a></li>
+{% endfor %}
+{% endif %}
 <h2>Most Recent Questions</h2>
 {% if top_list %}
 <ul>

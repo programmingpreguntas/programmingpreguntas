@@ -4,7 +4,9 @@
 <p>
     Go <a href="/preguntas/">Home</a>
 </p>
-
+<p>
+    {{request_dict}}
+</p>
 Hello {{usuario.name}}!
 <p>
     Ask <a href="{% url 'preguntas:new_question' %}">New Question</a>.

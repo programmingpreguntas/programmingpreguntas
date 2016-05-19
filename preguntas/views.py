@@ -15,6 +15,12 @@ def profile(request, usuario_id):
     usuario = get_object_or_404(Usuario, id=usuario_id)
     question_set = Question.objects.filter(owner_id=usuario_id)
     questions_answered_set = Answer.objects.filter(owner_id=usuario_id)
+    try:
+        date= request.GET['date']
+        if date:
+            questions_answered_set = questions_answered_set.order_by('-created')
+    except KeyError:
+        pass
     context = {'usuario': usuario, 'question_set': question_set,
                'questions_answered_set': questions_answered_set}
     return render(request, 'preguntas/profile.html', context)
@@ -45,8 +51,17 @@ class UsuarioViewSet(viewsets.ModelViewSet):
 
 
 def index(request):
-    top_list = Question.objects.all()[:20]
-    return render(request, 'preguntas/question_page.html', {'top_list': top_list})
+    context = {}
+    top_list = Question.objects.all().order_by('-created')[:20]
+    try:
+        terms = request.GET['search']
+        context['terms'] = terms
+        found_questions = Question.objects.filter(body__icontains=terms)
+        context['found_questions'] = found_questions
+    except KeyError:
+        pass
+    context['top_list'] = top_list
+    return render(request, 'preguntas/question_page.html', context)
 
 
 def login_user(request):
