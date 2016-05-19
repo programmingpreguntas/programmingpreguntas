@@ -11,5 +11,7 @@ urlpatterns = [
     url(r'^login/$', views.login_user, name='login'),
     url(r'^search_questions/', views.search, name='search'),
     url(r'^login/auth_view/$', views.auth_view, name='auth'),
-
+    url(r'^question/(?P<question_id>[0-9]+)/$', views.question_detail,
+        name='question'),
+    url(r'new_question/$', views.new_question, name='new_question')
 ]
