@@ -33,3 +33,18 @@ class Answer(models.Model):
 
     def __str__(self):
         return self.body[:50]
+
+
+class Comment(models.Model):
+    body = models.TextField()
+    upvotes = models.ManyToManyField(Usuario, related_name='comment_voted_up')
+    created = models.DateTimeField(auto_now_add=True)
+    owner = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    parent_comment = models.IntegerField()
+    parent_question = models.OneToOneField(Question, null=True,
+                                           on_delete=models.CASCADE)
+    parent_answer = models.OneToOneField(Answer, null=True,
+                                         on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.body[:50]

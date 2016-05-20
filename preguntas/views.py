@@ -1,7 +1,7 @@
 import uuid
 from django.shortcuts import render, get_object_or_404, render_to_response
 from rest_framework import viewsets
-from .models import Question, Answer, Usuario
+from .models import Question, Answer, Usuario, Comment
 from .serializers import QuestionSerializer, AnswerSerializer, UsuarioSerializer
 from django.contrib.auth import authenticate, login
 from django.shortcuts import redirect
@@ -11,7 +11,8 @@ from .utilities import get_query
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import auth
 from django.core.context_processors import csrf
-from .forms import AnswerForm, QuestionForm
+from django.template import RequestContext
+from .forms import AnswerForm, QuestionForm, CommentForm
 
 
 
@@ -136,7 +137,7 @@ def question_detail(request, question_id):
             try:
                 answer.owner = Usuario.objects.get(id=request.user.usuario.id)
             except AttributeError:
-                answer.owner = Usuario.objects.get(id=163) # if anon user, make it user 163 for now.
+                answer.owner = Usuario.objects.get(id=100) # if anon user, make it user 163 for now.
             answer.save()
             return question_redirect(request, question_id)
         else:
@@ -160,7 +161,7 @@ def new_question(request):
             try:
                 question.owner = Usuario.objects.get(id=request.user.usuario.id)
             except AttributeError:
-                question.owner = Usuario.objects.get(id=163) # if anon user, make it user 163 for now.
+                question.owner = Usuario.objects.get(id=100) # if anon user, make it user 163 for now.
             question.save()
             return question_redirect(request, question.id)
         else:
@@ -169,3 +170,38 @@ def new_question(request):
         form = QuestionForm()
         context = {'form': form}
         return render(request, 'preguntas/new_question.html', context)
+
+
+def new_comment(request):
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        request_dict = request.POST
+        if form.is_valid():
+            comment = form.save(commit=False)
+            try:
+                comment.owner = Usuario.objects.get(id=request.user.usuario.id)
+            except AttributeError:
+                comment.owner = Usuario.objects.get(id=100) # if anon user, make it user 163 for now.
+            parent = request_dict['parent']
+            parent_id = int(request_dict['parent_id'])
+            if parent == 'Question':
+                comment.parent_question = get_object_or_404(Question, parent_id)
+            elif parent == 'Answer':
+                comment.parent_answer = get_object_or_404(Answer, parent_id)
+            else:
+                comment.parent_comment = get_object_or_404(Comment, parent_id)
+            comment.save()
+            return question_redirect(request, int(request_dict['question_id']))
+        else:
+            print(form.errors)
+    else:
+        context = RequestContext(request)
+        parent_id = int(context['parent_id'])
+        form = CommentForm()
+        context['form'] = form
+        context['question'] = get_object_or_404(Question, int(context['question_id']))
+        if context['parent'] == 'Answer':
+            context['answer'] = get_object_or_404(Answer, parent_id)
+        elif context['parent'] == 'Comment':
+            context['comment'] = get_object_or_404(Comment, parent_id)
+        return render(request, 'preguntas/new_comment.html', context)

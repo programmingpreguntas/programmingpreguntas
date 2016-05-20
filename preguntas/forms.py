@@ -1,5 +1,5 @@
 from django import forms
-from .models import Question, Answer
+from .models import Question, Answer, Comment
 
 
 class QuestionForm(forms.ModelForm):
@@ -19,4 +19,13 @@ class AnswerForm(forms.ModelForm):
 
     class Meta:
         model = Answer
+        fields = ('body',)
+
+
+class CommentForm(forms.ModelForm):
+    body = forms.CharField(help_text="Please write your comment: ",
+                           widget=forms.Textarea)
+
+    class Meta:
+        model = Comment
         fields = ('body',)

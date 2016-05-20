@@ -1,12 +1,27 @@
 <head>
-    <title>New Question</title>
+    <title>New Comment</title>
 </head>
 <body>
     <p>
         Go <a href="/">Home</a>
     </p>
-    <h2>New Question</h2>
-    <form id="QuestionForm" method="post" action="">
+    <h2>New Comment</h2>
+    <p>
+        {% if question %}
+        Question: {{question}}
+        {% endif %}
+    </p>
+    <p>
+        {% if answer %}
+        Answer: {{answer}}
+        {% endif %}
+    </p>
+    <p>
+        {% if comment %}
+        Comment: {{comment}}
+        {% endif %}
+    </p>}
+    <form id="CommentForm" method="post" action="">
 
                 {% csrf_token %}
                 {% for hidden in form.hidden_fields %}
@@ -21,6 +36,6 @@
                     </p>
                 {% endfor %}
 
-                <input type="submit" name="submit" value="Add Question" />
+                <input type="submit" name="submit" value="Add Comment" />
             </form>
 </body>
