@@ -64,8 +64,8 @@ TEMPLATES = (
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [os.path.join(BASE_DIR, 'preguntas/templates/preguntas_box'),
-                os.path.join(BASE_DIR, 'preguntas/templates/preguntas]'),
-                ],
+                 os.path.join(BASE_DIR, 'preguntas/templates/preguntas]'),
+                 ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -91,9 +91,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'Pipita',
         'USER': 'Pipita',
-        'PASSWORD' : '',
-        'HOST' : '127.0.0.1',
-        'PORT' : '5432',
+        'PASSWORD': '',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
 }
 
