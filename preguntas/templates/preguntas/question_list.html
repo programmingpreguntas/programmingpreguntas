@@ -4,7 +4,7 @@ Ask a <a href="{% url 'preguntas:new_question' %}">New Question</a>
 {% if question_list %}
 <ul>
   {% for question in question_list %}
-  <li> <a href="/question/{{ question.id }}">{{ question }}</a></li>
+  <li> <a href="{%url 'preguntas:question' question.id%}">{{ question }}</a></li>
   {% endfor %}
 </ul>
 <span class="step-links">
@@ -27,7 +27,7 @@ Ask a <a href="{% url 'preguntas:new_question' %}">New Question</a>
     <input type="submit" value="Users Log in">
 </form>
 
-<form id="searchBar" action="/search/" method="get">
+<form id="searchBar" action="{%url 'preguntas:search'%}" method="get">
   <input type="text" name="q" value="Search Questions">
   <input type="submit" name="name" value="Search">
 </form>

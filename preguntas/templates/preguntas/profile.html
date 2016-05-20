@@ -2,7 +2,7 @@
     <title>Usuario {{usuario.name}}</title>
 </head>
 <p>
-    Go <a href="/">Home</a>
+    Go <a href="{% url 'preguntas:questions' %}">Home</a>
 </p>
 <p>
     {{request_dict}}
@@ -17,7 +17,7 @@ Hello {{usuario.name}}!
     <ul>
         {% for question in question_set %}
             {% with question_id=question.id %}
-            <li><a href="/question/{{question.id}}">{{question}}</a></li>
+            <li><a href="{%url 'preguntas:question' question.id%}">{{question.title}}</a></li>
             {% endwith %}
         {% endfor %}
     </ul>
@@ -30,7 +30,7 @@ Hello {{usuario.name}}!
 <ul>
     {% for answer in questions_answered_set %}
     {% with answer_question_id=answer.question_id %}
-    <li><a href="/question/{{answer.question_id}}">{{answer}}</a></li>
+    <li><a href="{%url 'preguntas:question' answer.question_id%}">{{answer}}</a></li>
     {% endwith %}
     {% endfor %}
 </ul>
