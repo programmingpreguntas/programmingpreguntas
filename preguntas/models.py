@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Count, Sum
 from django.contrib.auth.models import User
 
 
@@ -9,6 +10,9 @@ class Usuario(models.Model):
     def __str__(self):
         return self.name
 
+    def get_question_points(self):
+        my_questions = Question.objects.filter(owner=self)
+        return my_questions.annotate(points=Count('upvotes')).aggregate(Sum('points'))
 
 class Question(models.Model):
     title = models.CharField(max_length=255)

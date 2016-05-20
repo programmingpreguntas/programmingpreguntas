@@ -7,7 +7,7 @@
 <p>
     {{request_dict}}
 </p>
-Hello {{usuario.name}}!
+Hello {{usuario.name}}! {{usuario.get_question_points}}
 <p>
     Ask <a href="{% url 'preguntas:new_question' %}">New Question</a>.
 </p>

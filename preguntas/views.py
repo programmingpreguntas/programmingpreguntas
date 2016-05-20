@@ -39,7 +39,7 @@ class QuestionList(ListView):
         if 'queryset' in self.kwargs:
             return self.kwargs['queryset']
         else:
-            return super(ListView, self).get_queryset()
+            return super().get_queryset()
 
 
 # Search copied from http://julienphalip.com/post/2825034077/adding-search-to-a-django-site-in-a-snap
