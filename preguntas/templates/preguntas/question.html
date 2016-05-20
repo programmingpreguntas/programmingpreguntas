@@ -1,3 +1,4 @@
+{% load custom_template_tags %}
 <head>
     <title>Question {{question.id}}</title>
 </head>
@@ -15,6 +16,9 @@ Question # {{question.id}}
 <p>
     {{question.body}}
 </p>
+<p>
+  {%vote_buttons question request%}
+</p>
 {% if answers %}
 <p>
     <h3>Answer(s):</h3>
@@ -24,7 +28,10 @@ Question # {{question.id}}
         {{answer.body}}
     </p>
     <p>
-        By <a href="profile/{{answer.owner_id}}">{{answer.owner}}</a> on {{answer.created}}.
+        By <a href="profile/{{answer.owner_id}}">{{answer.owner}}</a> on {{answer.created}}
+    </p>
+    <p>
+      {%vote_buttons answer request%}
     </p>
     {% endfor %}
 {% endif %}
