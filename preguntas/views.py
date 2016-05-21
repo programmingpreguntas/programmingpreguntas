@@ -151,9 +151,11 @@ def question_detail(request, question_id):
         # If the request was not a POST, display the form to enter details.
         form = AnswerForm()
     question = Question.objects.get(id=question_id)
+    question_comments = question.get_comments()
     answers = Answer.objects.filter(question_id=question.id)
     context = {'form': form,
                'question': question,
+               'question_comments': question_comments,
                'answers': answers}
     return render(request, 'preguntas/question.html', context)
 

@@ -15,9 +15,23 @@ Question # {{question.id}}
 <p>
     {{question.body}}
 </p>
+{% if question_comments %}
 <p>
-    {% with question_id = question.id %}
-    Add a <a href="{% url 'preguntas:new_comment' Question question_id %}">New Comment</a>
+    <h3>Comments</h3>
+</p>
+{% for comment in question_comments %}
+<p>
+
+    {{comment.body}}
+</p>
+<p>
+    By: <a href="/profile/{{comment.owner_id}}">{{comment.owner}}</a> on {{comment.created}}.
+</p>
+    {% endfor %}
+    {% endif %}
+<p>
+    {% with question_id=question.id %}
+    Add a <a href="{% url 'preguntas:new_comment' "Question" question_id %}">New Comment</a>
     {% endwith %}
 </p>
 {% if answers %}
@@ -31,14 +45,23 @@ Question # {{question.id}}
     <p>
         By <a href="/profile/{{answer.owner_id}}">{{answer.owner}}</a> on {{answer.created}}.
     </p>
-
-
+    {% if answer.get_comments %}
     <p>
-        {{answer.comment.body}}
+        <h3>Comments</h3>
+    </p>
+    {% for comment in answer.get_comments %}
+    <p>
+
+        {{comment.body}}
     </p>
     <p>
-        {% with answer_id = answer.id %}
-        Add a <a href="{% url 'preguntas:new_comment' Answer answer_id %}">New Comment</a>
+        By: <a href="/profile/{{comment.owner_id}}">{{comment.owner}}</a> on {{comment.created}}.
+    </p>
+        {% endfor %}
+        {% endif %}
+    <p>
+        {% with answer_id=answer.id %}
+        Add a <a href="{% url 'preguntas:new_comment' "Answer" answer_id %}">New Comment</a>
         {% endwith %}
     </p>
     {% endfor %}

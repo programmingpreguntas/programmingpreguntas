@@ -45,6 +45,9 @@ class Question(models.Model):
     def __str__(self):
         return self.title
 
+    def get_comments(self):
+        return self.comments.all()
+
 
 class Answer(models.Model):
     body = models.TextField()
@@ -59,3 +62,6 @@ class Answer(models.Model):
 
     def __str__(self):
         return self.body[:50]
+
+    def get_comments(self):
+        return self.comments.all()
