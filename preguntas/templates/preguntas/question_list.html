@@ -1,33 +1,30 @@
-Ask a <a href="{% url 'preguntas:new_question' %}">New Question</a>
-<h2>Most Recent Questions</h2>
+{% extends 'preguntas/base.html' %}
 
-{% if question_list %}
-<ul>
-  {% for question in question_list %}
-  <li> <a href="{%url 'preguntas:question' question.id%}">{{ question }}</a></li>
-  {% endfor %}
-</ul>
-<span class="step-links">
-        {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-        {% endif %}
+{% block content %}
 
-        <span class="current">
-            Page {{ page_obj.number }} of {{ paginator.num_pages }}.
-        </span>
+  Ask a <a href="{% url 'preguntas:new_question' %}">New Question</a>
+  <h2>Most Recent Questions</h2>
 
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">next</a>
-        {% endif %}
-    </span>
-{% else %}
-<p>No questions are available</p>
-{% endif %}
-<form action="{% url 'preguntas:login' %}">
-    <input type="submit" value="Users Log in">
-</form>
+  {% if question_list %}
+  <ul>
+    {% for question in question_list %}
+    <li> <a href="{%url 'preguntas:question' question.id%}">{{ question }}</a></li>
+    {% endfor %}
+  </ul>
+  <span class="step-links">
+          {% if page_obj.has_previous %}
+              <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+          {% endif %}
 
-<form id="searchBar" action="{%url 'preguntas:search'%}" method="get">
-  <input type="text" name="q" value="Search Questions">
-  <input type="submit" name="name" value="Search">
-</form>
+          <span class="current">
+              Page {{ page_obj.number }} of {{ paginator.num_pages }}.
+          </span>
+
+          {% if page_obj.has_next %}
+              <a href="?page={{ page_obj.next_page_number }}">next</a>
+          {% endif %}
+      </span>
+  {% else %}
+  <p>No questions are available</p>
+  {% endif %}
+{% endblock %}
