@@ -16,7 +16,9 @@ Question # {{question.id}}
     {{question.body}}
 </p>
 <p>
-    Add a <a href="{% url 'preguntas:new_comment' %}?parent=Question&question_id={{question.id}}&parent_id={{question.id}}">New Comment</a>
+    {% with question_id = question.id %}
+    Add a <a href="{% url 'preguntas:new_comment' Question question_id %}">New Comment</a>
+    {% endwith %}
 </p>
 {% if answers %}
 <p>
@@ -27,17 +29,17 @@ Question # {{question.id}}
         {{answer.body}}
     </p>
     <p>
-        By <a href="profile/{{answer.owner_id}}">{{answer.owner}}</a> on {{answer.created}}.
+        By <a href="/profile/{{answer.owner_id}}">{{answer.owner}}</a> on {{answer.created}}.
     </p>
 
-    <p>
-        Add a <a href="{% url 'preguntas:new_comment' %}?parent=Answer&question_id={{question.id}}&parent_id={{answer.id}}">New Comment</a>
-    </p>
+
     <p>
         {{answer.comment.body}}
     </p>
     <p>
-        Add a <a href="{% url 'preguntas:new_comment' %}?parent=Comment&question_id={{question.id}}&parent_id={{answer.comment.id}}">New Comment</a>
+        {% with answer_id = answer.id %}
+        Add a <a href="{% url 'preguntas:new_comment' Answer answer_id %}">New Comment</a>
+        {% endwith %}
     </p>
     {% endfor %}
 {% endif %}

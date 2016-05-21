@@ -7,20 +7,16 @@
     </p>
     <h2>New Comment</h2>
     <p>
-        {% if question %}
-        Question: {{question}}
+        Comment on {{parent_name}}# {{parent_obj.id}}:
+    </p>
+    <p>
+        {% if parent_obj.title %}
+        Title: {{parent_obj.title}}}
         {% endif %}
     </p>
     <p>
-        {% if answer %}
-        Answer: {{answer}}
-        {% endif %}
+        Body: {{parent_obj.body}}
     </p>
-    <p>
-        {% if comment %}
-        Comment: {{comment}}
-        {% endif %}
-    </p>}
     <form id="CommentForm" method="post" action="">
 
                 {% csrf_token %}
