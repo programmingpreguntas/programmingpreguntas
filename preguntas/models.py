@@ -10,9 +10,17 @@ class Usuario(models.Model):
     def __str__(self):
         return self.name
 
-    def get_question_points(self):
-        my_questions = Question.objects.filter(owner=self)
-        return my_questions.annotate(points=Count('upvotes')).aggregate(Sum('points'))
+    def _get_votable_points(self, Votable):
+        my_votables = Votable.objects.filter(owner=self)
+        votable_points = my_votables.annotate(points=Count('upvotes')).aggregate(sum=Sum('points'))['sum']
+        return votable_points
+
+    def get_points(self):
+        question_points = self._get_votable_points(Question)
+        answer_points = self._get_votable_points(Answer)
+        return question_points + answer_points
+
+
 
 class Question(models.Model):
     title = models.CharField(max_length=255)
@@ -24,6 +32,8 @@ class Question(models.Model):
     def __str__(self):
         return self.title
 
+    def get_score(self):
+        return self.upvotes.count()
 
 class Answer(models.Model):
     body = models.TextField()
@@ -37,3 +47,6 @@ class Answer(models.Model):
 
     def __str__(self):
         return self.body[:50]
+
+    def get_score(self):
+        return self.upvotes.count()
