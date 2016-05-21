@@ -1,0 +1,7 @@
+<form class="" action="{%url "preguntas:vote"%}" method="post">
+  {% csrf_token %}
+  <input type="hidden" name="votable_type" value="{{votable_type}}">
+  <input type="hidden" name="votable_id" value="{{votable_id}}">
+  <input type='hidden' name='this_url' value="{{request.get_full_path}}">
+  <input type="submit" name="name" value="UP">
+</form>

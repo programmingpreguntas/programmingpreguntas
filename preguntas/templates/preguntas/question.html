@@ -1,7 +1,7 @@
 {% extends 'preguntas/base.html' %}
 {% block title%} {{question.title}} {% endblock %}
 {% block content %}
-
+{% load custom_template_tags %}
 <p>
     Go <a href="{%url 'preguntas:questions'%}">Home</a>
 </p>
@@ -9,11 +9,17 @@
 Question # {{question.id}}
 </p>
 <p>
+  Points: {{question.get_score}}
+</p>
+<p>
     <h2>Title: {{question.title}}</h2>
 </p>
 
 <p>
     {{question.body}}
+</p>
+<p>
+  {%vote_buttons question request%}
 </p>
 {% if answers %}
 <p>
@@ -25,6 +31,9 @@ Question # {{question.id}}
     </p>
     <p>
         By <a href="{% url 'preguntas:profile' answer.owner.id%}">{{answer.owner}}</a> on {{answer.created}}.
+    </p>
+    <p>
+      {%vote_buttons answer request%}
     </p>
     {% endfor %}
 {% endif %}

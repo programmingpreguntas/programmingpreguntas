@@ -12,6 +12,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import auth
 from django.core.context_processors import csrf
 from .forms import AnswerForm, QuestionForm
+from django.apps import apps
 
 
 
@@ -38,7 +39,7 @@ class QuestionList(ListView):
         if 'queryset' in self.kwargs:
             return self.kwargs['queryset']
         else:
-            return super(ListView, self).get_queryset()
+            return super().get_queryset()
 
 
 # Search copied from http://julienphalip.com/post/2825034077/adding-search-to-a-django-site-in-a-snap
@@ -160,7 +161,7 @@ def new_question(request):
             try:
                 question.owner = Usuario.objects.get(id=request.user.usuario.id)
             except AttributeError:
-                question.owner = Usuario.objects.get(id=163) # if anon user, make it user 163 for now.
+                question.owner = Usuario.objects.get(id=100) # if anon user, make it user 163 for now.
             question.save()
             return question_redirect(request, question.id)
         else:
@@ -169,3 +170,17 @@ def new_question(request):
         form = QuestionForm()
         context = {'form': form}
         return render(request, 'preguntas/new_question.html', context)
+
+
+def vote(request):
+    if request.method == "POST":
+        model_name = request.POST['votable_type']
+        vote_id = request.POST['votable_id']
+        preguntas_config = apps.get_app_config("preguntas")
+        votable = preguntas_config.get_model(model_name).objects.get(id=vote_id)
+        try:
+            votable.upvotes.add(Usuario.objects.get(id=request.user.usuario.id))
+        except AttributeError:
+            votable.upvotes.add(Usuario.objects.get(id=100))
+
+    return HttpResponseRedirect(request.POST['this_url'])
