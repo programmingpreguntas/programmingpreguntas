@@ -49,15 +49,7 @@ def search(request):
         query_string = request.GET['q']
         question_query = get_query(query_string, ['title', 'body', ])
         found_questions = Question.objects.filter(question_query)
-        # context = {
-        #            'query_string': query_string,
-        #            'found_questions': found_questions
-        #            }
-    # return HttpResponse("Searched for " + query_string +
-    #                     " found " + str(len(found_questions)) + " questions.")
     return QuestionList.as_view()(request, queryset=found_questions)
-    # return render(request, 'search/search_results.html',
-    #               context=context)
 
 
 class QuestionViewSet(viewsets.ModelViewSet):
@@ -98,11 +90,11 @@ def index(request):
     return render(request, 'preguntas/question_list.html', context)
 
 
-
 def login_user(request):
     c = {}
     c.update(csrf(request))
     return render_to_response('login.html', c)
+
 
 def auth_view(request):
     username = request.POST.get('username', '')
@@ -131,8 +123,9 @@ def auth_view(request):
 
 
 def question_redirect(request, question_id):
-    url = '/preguntas/question/{}/'.format(question_id)
+    url = '/questions/{}/'.format(question_id)
     return HttpResponseRedirect(url)
+
 
 def question_detail(request, question_id):
     if request.method == 'POST':
@@ -157,6 +150,7 @@ def question_detail(request, question_id):
                'question': question,
                'answers': answers}
     return render(request, 'preguntas/question.html', context)
+
 
 def new_question(request):
     if request.method == 'POST':

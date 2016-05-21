@@ -3,7 +3,7 @@
 </head>
 <body>
 <p>
-    Go <a href="/preguntas/">Home</a>
+    Go <a href="{%url 'preguntas:questions'%}">Home</a>
 </p>
 <p>
 Question # {{question.id}}
@@ -24,7 +24,7 @@ Question # {{question.id}}
         {{answer.body}}
     </p>
     <p>
-        By <a href="/preguntas/profile/{{answer.owner_id}}">{{answer.owner}}</a> on {{answer.created}}.
+        By <a href="{% url 'preguntas:profile' answer.owner.id%}">{{answer.owner}}</a> on {{answer.created}}.
     </p>
     {% endfor %}
 {% endif %}

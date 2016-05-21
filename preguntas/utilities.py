@@ -64,14 +64,14 @@ def make_random_answers():
     number_of_usuarios = Usuario.objects.count()
     for each_question in Question.objects.all():
         for _ in range(random.randint(0, 25)):
+            owner_index = random.randint(0, number_of_usuarios-1)
             try:
                 Answer(body=make_text(random.randint(25, 7500)),
                        question=each_question,
-                       owner=Usuario.objects.all()[random.randint(0, number_of_usuarios-1)]
+                       owner=Usuario.objects.all()[owner_index]
                        ).save()
             except (psyIntegrityError, djaIntegrityError):
                 continue
-
 
 
 def make_random_votes():
@@ -104,8 +104,8 @@ def make_random_data():
 def normalize_query(query_string,
                     findterms=re.compile(r'"([^"]+)"|(\S+)').findall,
                     normspace=re.compile(r'\s{2,}').sub):
-    ''' Splits the query string in invidual keywords, getting rid of unecessary spaces
-        and grouping quoted words together.
+    ''' Splits the query string in invidual keywords, getting rid of unecessary
+        spacesand grouping quoted words together.
         Example:
 
         >>> normalize_query('  some random  words "with   quotes  " and   spaces')
