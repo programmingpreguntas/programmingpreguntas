@@ -7,6 +7,6 @@ register = template.Library()
 def vote_buttons(votable, request):
     return {'votable_id': votable.id,
             "votable_type": votable.__class__.__name__,
-            "voted_up": votable.voted_up_by(Usuario.objects.get(id=1)),
+            "voted_up": votable.voted_up_by(Usuario.objects.get(id=request.user.usuario.id)),
             "request": request,
             }
