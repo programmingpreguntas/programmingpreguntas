@@ -124,7 +124,7 @@ def auth_view(request):
 
 
 def question_redirect(request, question_id):
-    url = '/questions/{}/'.format(question_id)
+    url = '/question/{}/'.format(question_id)
     return HttpResponseRedirect(url)
 
 
@@ -137,7 +137,7 @@ def question_detail(request, question_id):
             try:
                 answer.owner = Usuario.objects.get(id=request.user.usuario.id)
             except AttributeError:
-                answer.owner = Usuario.objects.get(id=163) # if anon user, make it user 163 for now.
+                answer.owner = Usuario.objects.get(id=12) # if anon user, make it user 163 for now.
             answer.save()
             return question_redirect(request, question_id)
         else:
@@ -161,7 +161,7 @@ def new_question(request):
             try:
                 question.owner = Usuario.objects.get(id=request.user.usuario.id)
             except AttributeError:
-                question.owner = Usuario.objects.get(id=100) # if anon user, make it user 163 for now.
+                question.owner = Usuario.objects.get(id=1) # if anon user, make it user 163 for now.
             question.save()
             return question_redirect(request, question.id)
         else:
@@ -181,6 +181,6 @@ def vote(request):
         try:
             votable.upvotes.add(Usuario.objects.get(id=request.user.usuario.id))
         except AttributeError:
-            votable.upvotes.add(Usuario.objects.get(id=100))
+            votable.upvotes.add(Usuario.objects.get(id=1))
 
     return HttpResponseRedirect(request.POST['this_url'])
