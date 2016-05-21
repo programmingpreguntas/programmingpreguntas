@@ -4,7 +4,7 @@
 		<p class='error'> Sorry......, that's not a valid username or password' </p>
 	{% endif %}
 
-	<form action="{% url 'preguntas:auth' %}" method="post"> {% csrf_token %}
+	<form action="{% url 'preguntas:auth_view' %}" method="post"> {% csrf_token %}
 
 		<label for="username">username:</label>
 		<input type="text" name="username" value="" id="username" /><br />

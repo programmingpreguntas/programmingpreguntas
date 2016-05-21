@@ -12,7 +12,6 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import auth
 from django.core.context_processors import csrf
 from .forms import AnswerForm, QuestionForm
-from django.apps import apps
 
 
 
@@ -39,7 +38,7 @@ class QuestionList(ListView):
         if 'queryset' in self.kwargs:
             return self.kwargs['queryset']
         else:
-            return super().get_queryset()
+            return super(ListView, self).get_queryset()
 
 
 # Search copied from http://julienphalip.com/post/2825034077/adding-search-to-a-django-site-in-a-snap
@@ -94,6 +93,9 @@ def index(request):
 def login_user(request):
     c = {}
     c.update(csrf(request))
+    request.session['fav_color'] = 'blue'
+
+    print(request.session)
     return render_to_response('login.html', c)
 
 
@@ -106,8 +108,9 @@ def auth_view(request):
         if user.is_active:
             login(request, user)
             state = "You're successfully logged in"
-            return HttpResponse(state)
-            # return redirect()
+            #return HttpResponse(state)
+            print(type(user.id))
+            return HttpResponseRedirect('/profile/%s' % user.id)
 
         else:
             state = "Your account is not active, please contact the site admin."
@@ -116,7 +119,7 @@ def auth_view(request):
             return HttpResponse(state)
             # return redirect()
     else:
-        state = "Your username and/or password were incorrect..... JUlio"
+        state = "Your username and/or password were incorrect."
         # context = {'errors': [state]}
         # return render(request, 'login.html', context)
         return HttpResponse(state)
@@ -161,7 +164,7 @@ def new_question(request):
             try:
                 question.owner = Usuario.objects.get(id=request.user.usuario.id)
             except AttributeError:
-                question.owner = Usuario.objects.get(id=100) # if anon user, make it user 163 for now.
+                question.owner = Usuario.objects.get(id=163) # if anon user, make it user 163 for now.
             question.save()
             return question_redirect(request, question.id)
         else:
@@ -170,17 +173,3 @@ def new_question(request):
         form = QuestionForm()
         context = {'form': form}
         return render(request, 'preguntas/new_question.html', context)
-
-
-def vote(request):
-    if request.method == "POST":
-        model_name = request.POST['votable_type']
-        vote_id = request.POST['votable_id']
-        preguntas_config = apps.get_app_config("preguntas")
-        votable = preguntas_config.get_model(model_name).objects.get(id=vote_id)
-        try:
-            votable.upvotes.add(Usuario.objects.get(id=request.user.usuario.id))
-        except AttributeError:
-            votable.upvotes.add(Usuario.objects.get(id=100))
-
-    return HttpResponseRedirect(request.POST['this_url'])
