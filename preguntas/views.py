@@ -105,7 +105,7 @@ def auth_view(request):
     if user is not None:
         if user.is_active:
             login(request, user)
-            state = "You're successfully logged in!"
+            state = "You're successfully logged in"
             return HttpResponse(state)
             # return redirect()
 
@@ -116,10 +116,10 @@ def auth_view(request):
             return HttpResponse(state)
             # return redirect()
     else:
-        state = "Your username and/or password were incorrect."
-        context = {'errors': [state]}
-        return render(request, 'login.html', context)
-        #return HttpResponse(state)
+        state = "Your username and/or password were incorrect..... JUlio"
+        # context = {'errors': [state]}
+        # return render(request, 'login.html', context)
+        return HttpResponse(state)
         # return redirect()
 
 
