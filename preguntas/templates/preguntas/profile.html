@@ -1,15 +1,11 @@
-<head>
-    <title>Usuario {{usuario.name}}</title>
-</head>
-<p>
-    Go <a href="/">Home</a>
-</p>
-<p>
-    {{request_dict}}
-</p>
+<<<<<<< HEAD
+{% extends 'preguntas/base.html' %}
+{% block title%} {{usuario.name}}'s profile {% endblock %}
+{% block content %}
 Hello {{usuario.name}}!
+
 <p>
-    Ask <a href="{% url 'preguntas:new_question' %}">New Question</a>.
+    Ask a <a href="{% url 'preguntas:new_question' %}">New Question</a>.
 </p>
 {% if question_set %}
 <div class="question_set">
@@ -17,7 +13,7 @@ Hello {{usuario.name}}!
     <ul>
         {% for question in question_set %}
             {% with question_id=question.id %}
-            <li><a href="/question/{{question.id}}">{{question}}</a></li>
+            <li><a href="{%url 'preguntas:question' question.id%}">{{question.title}}</a></li>
             {% endwith %}
         {% endfor %}
     </ul>
@@ -30,9 +26,11 @@ Hello {{usuario.name}}!
 <ul>
     {% for answer in questions_answered_set %}
     {% with answer_question_id=answer.question_id %}
-    <li><a href="/question/{{answer.question_id}}">{{answer}}</a></li>
+    <li><a href="{%url 'preguntas:question' answer.question_id%}">{{answer}}&hellip;</a></li>
     {% endwith %}
     {% endfor %}
 </ul>
 </div>
 {% endif %}
+
+{% endblock %}

@@ -1,12 +1,15 @@
-<head>
-    <title>Question {{question.id}}</title>
-</head>
-<body>
+{% extends 'preguntas/base.html' %}
+{% block title%} {{question.title}} {% endblock %}
+{% block content %}
+{% load custom_template_tags %}
 <p>
-    Go <a href="/">Home</a>
+    Go <a href="{%url 'preguntas:questions'%}">Home</a>
 </p>
 <p>
 Question # {{question.id}}
+</p>
+<p>
+  Points: {{question.get_score}}
 </p>
 <p>
     <h2>Title: {{question.title}}</h2>
@@ -33,6 +36,9 @@ Question # {{question.id}}
     {% with question_id=question.id %}
     Add a <a href="{% url 'preguntas:new_comment' "Question" question_id %}">New Comment</a>
     {% endwith %}
+
+<p>
+  {% vote_buttons question request %}
 </p>
 {% if answers %}
 <p>
@@ -63,6 +69,10 @@ Question # {{question.id}}
         {% with answer_id=answer.id %}
         Add a <a href="{% url 'preguntas:new_comment' "Answer" answer_id %}">New Comment</a>
         {% endwith %}
+        By <a href="{% url 'preguntas:profile' answer.owner.id%}">{{answer.owner}}</a> on {{answer.created}}.
+    </p>
+    <p>
+      {%vote_buttons answer request%}
     </p>
     {% endfor %}
 {% endif %}
@@ -84,4 +94,4 @@ Question # {{question.id}}
 
             <input type="submit" name="submit" value="Add Answer" />
         </form>
-</body>
+{% endblock %}

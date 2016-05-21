@@ -14,5 +14,7 @@ urlpatterns = [
         name='question'),
     url(r'^question/new$', views.new_question, name='new_question'),
     url(r'^comment/new/(?P<parent_type>[a-zA-Z]+)/(?P<parent_id>[0-9]+)/$',
-        views.new_comment, name='new_comment')
+        views.new_comment, name='new_comment'),
+    url(r'^vote/$', views.vote, name="vote")
+
 ]

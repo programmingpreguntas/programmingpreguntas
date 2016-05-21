@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Count, Sum
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
@@ -10,6 +11,17 @@ class Usuario(models.Model):
 
     def __str__(self):
         return self.name
+
+    def _get_votable_points(self, Votable):
+        my_votables = Votable.objects.filter(owner=self)
+        votable_points = my_votables.annotate(points=Count('upvotes')).aggregate(sum=Sum('points'))['sum']
+        return votable_points
+
+    def get_points(self):
+        question_points = self._get_votable_points(Question)
+        answer_points = self._get_votable_points(Answer)
+        return question_points + answer_points
+
 
 
 class Comment(models.Model):
@@ -48,6 +60,9 @@ class Question(models.Model):
     def get_comments(self):
         return self.comments.all()
 
+    def get_score(self):
+        return self.upvotes.count()
+
 
 class Answer(models.Model):
     body = models.TextField()
@@ -65,3 +80,6 @@ class Answer(models.Model):
 
     def get_comments(self):
         return self.comments.all()
+
+    def get_score(self):
+        return self.upvotes.count()

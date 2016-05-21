@@ -12,6 +12,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import auth
 from django.core.context_processors import csrf
 from .forms import AnswerForm, QuestionForm, CommentForm
+from django.apps import apps
+
 
 
 def get_parent_obj(parent_type, parent_id):
@@ -44,7 +46,7 @@ class QuestionList(ListView):
         if 'queryset' in self.kwargs:
             return self.kwargs['queryset']
         else:
-            return super(ListView, self).get_queryset()
+            return super().get_queryset()
 
 
 # Search copied from http://julienphalip.com/post/2825034077/adding-search-to-a-django-site-in-a-snap
@@ -110,7 +112,7 @@ def auth_view(request):
     if user is not None:
         if user.is_active:
             login(request, user)
-            state = "You're successfully logged in!"
+            state = "You're successfully logged in"
             return HttpResponse(state)
             # return redirect()
 
@@ -121,10 +123,10 @@ def auth_view(request):
             return HttpResponse(state)
             # return redirect()
     else:
-        state = "Your username and/or password were incorrect."
-        context = {'errors': [state]}
-        return render(request, 'login.html', context)
-        #return HttpResponse(state)
+        state = "Your username and/or password were incorrect..... JUlio"
+        # context = {'errors': [state]}
+        # return render(request, 'login.html', context)
+        return HttpResponse(state)
         # return redirect()
 
 
@@ -202,3 +204,17 @@ def new_comment(request, parent_type, parent_id):
                    'parent_obj': parent_obj,
                    'parent_name': parent_obj.__class__.__name__}
         return render(request, 'preguntas/new_comment.html', context)
+
+
+def vote(request):
+    if request.method == "POST":
+        model_name = request.POST['votable_type']
+        vote_id = request.POST['votable_id']
+        preguntas_config = apps.get_app_config("preguntas")
+        votable = preguntas_config.get_model(model_name).objects.get(id=vote_id)
+        try:
+            votable.upvotes.add(Usuario.objects.get(id=request.user.usuario.id))
+        except AttributeError:
+            votable.upvotes.add(Usuario.objects.get(id=100))
+
+    return HttpResponseRedirect(request.POST['this_url'])
