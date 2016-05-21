@@ -6,13 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
 
+    <title>{% block title %} Programming Preguntas{% endblock%}</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+    <!-- Make Room for NavBar -->
+    <style>
+      body{
+        padding-top: 70px
+      }
+      </style>
   </head>
   <body>
 
 
-    <nav class="navbar navbar-light bg-faded">
+    <nav class="navbar navbar-fixed-top navbar-light bg-faded">
       <a class="navbar-brand" href="{% url 'preguntas:questions' %}">ProgramingPreguntas</a>
       <ul class="nav navbar-nav">
         <li class="nav-item">
