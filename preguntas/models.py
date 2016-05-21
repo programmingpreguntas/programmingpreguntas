@@ -12,8 +12,8 @@ class Usuario(models.Model):
     def __str__(self):
         return self.name
 
-    def _get_votable_points(self, Votable):
-        my_votables = Votable.objects.filter(owner=self)
+    def _get_votable_points(self, VotableType):
+        my_votables = VotableType.objects.filter(owner=self)
         votable_points = my_votables.annotate(points=Count('upvotes')).aggregate(sum=Sum('points'))['sum']
         return votable_points
 
@@ -21,7 +21,6 @@ class Usuario(models.Model):
         question_points = self._get_votable_points(Question)
         answer_points = self._get_votable_points(Answer)
         return question_points + answer_points
-
 
 
 class Comment(models.Model):
@@ -45,7 +44,6 @@ class Comment(models.Model):
         else:
             return None
 
-
 class Question(models.Model):
     title = models.CharField(max_length=255)
     body = models.TextField()
@@ -62,6 +60,9 @@ class Question(models.Model):
 
     def get_score(self):
         return self.upvotes.count()
+
+    def voted_up_by(self, usuario):
+        return self.upvotes.filter(id=usuario.id).exists()
 
 
 class Answer(models.Model):
@@ -83,3 +84,6 @@ class Answer(models.Model):
 
     def get_score(self):
         return self.upvotes.count()
+
+    def voted_up_by(self, usuario):
+        return self.upvotes.filter(id=usuario.id).exists()

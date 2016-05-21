@@ -13,7 +13,7 @@ from django.contrib import auth
 from django.core.context_processors import csrf
 from .forms import AnswerForm, QuestionForm, CommentForm
 from django.apps import apps
-
+from django.core.urlresolvers import reverse
 
 
 def get_parent_obj(parent_type, parent_id):
@@ -22,6 +22,7 @@ def get_parent_obj(parent_type, parent_id):
     else:
         parent_obj = get_object_or_404(Answer, id=parent_id)
     return parent_obj
+
 
 def profile(request, usuario_id):
     usuario = get_object_or_404(Usuario, id=usuario_id)
@@ -130,11 +131,6 @@ def auth_view(request):
         # return redirect()
 
 
-def question_redirect(request, question_id):
-    url = '/question/{}/'.format(question_id)
-    return HttpResponseRedirect(url)
-
-
 def question_detail(request, question_id):
     if request.method == 'POST':
         form = AnswerForm(request.POST)
@@ -144,9 +140,10 @@ def question_detail(request, question_id):
             try:
                 answer.owner = Usuario.objects.get(id=request.user.usuario.id)
             except AttributeError:
-                answer.owner = Usuario.objects.get(id=100) # if anon user, make it user 163 for now.
+                answer.owner = Usuario.objects.get(id=12) # if anon user, make it user 163 for now.
             answer.save()
-            return question_redirect(request, question_id)
+            return HttpResponseRedirect(reverse('preguntas:question', args=(question_id,)))
+            #return question_redirect(question_id)
         else:
             print(form.errors)
     else:
@@ -171,9 +168,9 @@ def new_question(request):
                 question.owner = Usuario.objects.get(id=request.user.usuario.id)
             except AttributeError:
                 # if anon user, make it user 163 for now.
-                question.owner = Usuario.objects.get(id=100)
+                question.owner = Usuario.objects.get(id=1)
             question.save()
-            return question_redirect(request, question.id)
+            return HttpResponseRedirect(reverse('preguntas:question', args=(question.id,)))
         else:
             print(form.errors)
     else:
@@ -194,7 +191,8 @@ def new_comment(request, parent_type, parent_id):
                 comment.owner = Usuario.objects.get(id=100)
             comment.content_object = get_parent_obj(parent_type, parent_id)
             comment.save()
-            return question_redirect(request, comment.get_question_id())
+            question_id = comment.get_question_id()
+            return HttpResponseRedirect(reverse('preguntas:question', args=(question_id,)))
         else:
             print(form.errors)
     else:
@@ -215,6 +213,6 @@ def vote(request):
         try:
             votable.upvotes.add(Usuario.objects.get(id=request.user.usuario.id))
         except AttributeError:
-            votable.upvotes.add(Usuario.objects.get(id=100))
+            votable.upvotes.add(Usuario.objects.get(id=1))
 
     return HttpResponseRedirect(request.POST['this_url'])
