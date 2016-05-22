@@ -2,95 +2,91 @@
 {% block title%} {{question.title}} {% endblock %}
 {% block content %}
 {% load custom_template_tags %}
-  <div class="container">
-    <div class="row">
-      <div class="col-md-8 col-md-offset-2">
+  <p>
+    Question # {{question.id}}
+  </p>
+  <p>
+    Points: {{question.get_score}}
+  </p>
+  <p>
+    <h2>Title: {{question.title}}</h2>
+  </p>
+  <p>
+    {{question.body | linebreaksbr}}
+  </p>
+  {% if question_comments %}
+    <p>
+      <h3>Comments</h3>
+    </p>
+    {% for comment in question_comments %}
+      <p>
+        {{comment.body}}
+      </p>
+      <p>
+        By: <a href="/profile/{{comment.owner_id}}">{{comment.owner}}</a> on {{comment.created}}
+      </p>
+    {% endfor %}
+  {% endif %}
+  {% if user.is_authenticated%}
+    <p>
+      {% with question_id=question.id %}
+        Add a <a href="{% url 'preguntas:new_comment' "Question" question_id %}">New Comment</a>
+      {% endwith %}
+    </p>
+  {% endif %}
+  <p>
+    {% vote_buttons question request %}
+  </p>
+  <hr>
+  {% if answers %}
+    <p>
+      <h3>Answer(s):</h3>
+    </p>
+    {% for answer in answers %}
+      <p>
+        {{answer.body | linebreaksbr}}
+      </p>
+      <p>
+        By <a href="/profile/{{answer.owner_id}}">{{answer.owner}}</a> on {{answer.created}}
+      </p>
+      {% if answer.get_comments %}
         <p>
-          Question # {{question.id}}
+          <h3>Comments</h3>
         </p>
-        <p>
-          Points: {{question.get_score}}
-        </p>
-        <p>
-          <h2>Title: {{question.title}}</h2>
-        </p>
-        <p>
-          {{question.body | linebreaksbr}}
-        </p>
-        {% if question_comments %}
+        {% for comment in answer.get_comments %}
           <p>
-            <h3>Comments</h3>
+            {{comment.body}}
           </p>
-          {% for comment in question_comments %}
-            <p>
-              {{comment.body}}
-            </p>
-            <p>
-              By: <a href="/profile/{{comment.owner_id}}">{{comment.owner}}</a> on {{comment.created}}
-            </p>
-          {% endfor %}
-        {% endif %}
-        <p>
-          {% with question_id=question.id %}
-            Add a <a href="{% url 'preguntas:new_comment' "Question" question_id %}">New Comment</a>
-          {% endwith %}
-        </p>
-        <p>
-          {% vote_buttons question request %}
-        </p>
-        <hr>
-        {% if answers %}
           <p>
-            <h3>Answer(s):</h3>
+            By: <a href="/profile/{{comment.owner_id}}">{{comment.owner}}</a> on {{comment.created}}
           </p>
-          {% for answer in answers %}
-            <p>
-              {{answer.body | linebreaksbr}}
-            </p>
-            <p>
-              By <a href="/profile/{{answer.owner_id}}">{{answer.owner}}</a> on {{answer.created}}
-            </p>
-            {% if answer.get_comments %}
-              <p>
-                <h3>Comments</h3>
-              </p>
-              {% for comment in answer.get_comments %}
-                <p>
-                  {{comment.body}}
-                </p>
-                <p>
-                  By: <a href="/profile/{{comment.owner_id}}">{{comment.owner}}</a> on {{comment.created}}
-                </p>
-              {% endfor %}
-            {% endif %}
-            <p>
-              {% with answer_id=answer.id %}
-                Add a <a href="{% url 'preguntas:new_comment' "Answer" answer_id %}">New Comment</a>
-              {% endwith %}              <!-- By <a href="{% url 'preguntas:profile' answer.owner.id%}">{{answer.owner}}</a> on {{answer.created}}. -->
-            </p>
-            <p>
-              {%vote_buttons answer request%}
-            </p>
-            <hr>
-          {% endfor %}
-        {% endif %}
-        {% if user.is_authenticated and not i_have_answered%}
-          <form id="AnswerForm" method="post" action="">
-            {% csrf_token %}
-            {% for hidden in form.hidden_fields %}
-                {{ hidden }}
-            {% endfor %}
-            {% for field in form.visible_fields %}
-                {{ field.errors }}
-                {{ field.help_text }}
-                <p>
-                    {{ field }}
-                </p>
-            {% endfor %}
-            <input type="submit" name="submit" value="Add Answer" />
-          </form>
-        {% endif %}
-      </div>
-    </div>
-  </div>
+        {% endfor %}
+      {% endif %}
+      <p>
+        {% with answer_id=answer.id %}
+          Add a <a href="{% url 'preguntas:new_comment' "Answer" answer_id %}">New Comment</a>
+        {% endwith %}              <!-- By <a href="{% url 'preguntas:profile' answer.owner.id%}">{{answer.owner}}</a> on {{answer.created}}. -->
+      </p>
+      <p>
+        {%vote_buttons answer request%}
+      </p>
+      <hr>
+    {% endfor %}
+  {% endif %}
+  {% if user.is_authenticated and not i_have_answered%}
+    <form id="AnswerForm" method="post" action="">
+      {% csrf_token %}
+      {% for hidden in form.hidden_fields %}
+          {{ hidden }}
+      {% endfor %}
+      {% for field in form.visible_fields %}
+          {{ field.errors }}
+          {{ field.help_text }}
+          <p>
+              {{ field }}
+          </p>
+      {% endfor %}
+      <input type="submit" name="submit" value="Add Answer" />
+    </form>
+  {% endif %}
 {% endblock %}
