@@ -160,7 +160,7 @@ def question_detail(request, question_id):
     question = Question.objects.get(id=question_id)
     question_comments = question.get_comments()
     answers = Answer.objects.filter(question_id=question.id).annotate(score=Count("upvotes")).order_by('-score','-created')
-    i_have_answered = answers.filter(owner_id=request.user.usuario.id).exists()
+    i_have_answered = request.user.is_authenticated() and answers.filter(owner_id=request.user.usuario.id).exists()
     context = {'form': form,
                'question': question,
                'question_comments': question_comments,
