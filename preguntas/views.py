@@ -83,18 +83,18 @@ class UsuarioViewSet(viewsets.ModelViewSet):
     serializer_class = UsuarioSerializer
 
 
-def index(request):
-    context = {}
-    question_list = Question.objects.all().order_by('-created')[:20]
-    try:
-        terms = request.GET['search']
-        context['terms'] = terms
-        found_questions = Question.objects.filter(body__icontains=terms)
-        context['found_questions'] = found_questions
-    except KeyError:
-        pass
-    context['question_list'] = question_list
-    return render(request, 'preguntas/question_list.html', context)
+# def index(request):
+#     context = {}
+#     question_list = Question.objects.all().order_by('-created')[:20]
+#     try:
+#         terms = request.GET['search']
+#         context['terms'] = terms
+#         found_questions = Question.objects.filter(body__icontains=terms)
+#         context['found_questions'] = found_questions
+#     except KeyError:
+#         pass
+#     context['question_list'] = question_list
+#     return render(request, 'preguntas/question_list.html', context)
 
 
 def login_user(request):
@@ -145,6 +145,8 @@ def question_detail(request, question_id):
         form = AnswerForm(request.POST)
         if form.is_valid():
             answer = form.save(commit=False)
+            if not request.user.is_authenticated():
+                return HttpResponse("Stop hacking")
             answer.question = Question.objects.get(id=question_id)
             answer.owner = Usuario.objects.get(id=request.user.usuario.id)
             answer.save()
@@ -173,12 +175,9 @@ def new_question(request):
         form = QuestionForm(request.POST)
         if form.is_valid():
             question = form.save(commit=False)
-            try:
-                question.owner = Usuario.objects.get(id=request.user.usuario.id)
-            except AttributeError:
-                # if anon user, make it user 163 for now.
-                question.owner = Usuario.objects.get(id=1)
-
+            if not request.user.is_authenticated():
+                return HttpResponse("Stop hacking")
+            question.owner = Usuario.objects.get(id=request.user.usuario.id)
             question.save()
             return HttpResponseRedirect(reverse('preguntas:question', args=(question.id,)))
         else:
@@ -222,11 +221,7 @@ def vote(request):
         vote_id = request.POST['votable_id']
         preguntas_config = apps.get_app_config("preguntas")
         votable = preguntas_config.get_model(model_name).objects.get(id=vote_id)
-        try:
-            votable.upvotes.add(Usuario.objects.get(id=request.user.usuario.id))
-        except AttributeError:
-            votable.upvotes.add(Usuario.objects.get(id=1))
-
+        votable.upvotes.add(Usuario.objects.get(id=request.user.usuario.id))
     return HttpResponseRedirect(request.POST['this_url'])
 
 def register_user(request):

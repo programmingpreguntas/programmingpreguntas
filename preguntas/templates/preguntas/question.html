@@ -62,11 +62,13 @@
           </p>
         {% endfor %}
       {% endif %}
-      <p>
-        {% with answer_id=answer.id %}
-          Add a <a href="{% url 'preguntas:new_comment' "Answer" answer_id %}">New Comment</a>
-        {% endwith %}              <!-- By <a href="{% url 'preguntas:profile' answer.owner.id%}">{{answer.owner}}</a> on {{answer.created}}. -->
-      </p>
+      {% if user.is_authenticated %}
+        <p>
+          {% with answer_id=answer.id %}
+            Add a <a href="{% url 'preguntas:new_comment' "Answer" answer_id %}">New Comment</a>
+          {% endwith %}              <!-- By <a href="{% url 'preguntas:profile' answer.owner.id%}">{{answer.owner}}</a> on {{answer.created}}. -->
+        </p>
+      {% endif %}
       <p>
         {%vote_buttons answer request%}
       </p>
