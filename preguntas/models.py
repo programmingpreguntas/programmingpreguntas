@@ -20,7 +20,8 @@ class Usuario(models.Model):
     def get_points(self):
         question_points = self._get_votable_points(Question)
         answer_points = self._get_votable_points(Answer)
-        return question_points + answer_points
+        comment_point = self._get_votable_points(Comment)
+        return question_points + answer_points + comment_point
 
 
 class Comment(models.Model):
@@ -43,6 +44,13 @@ class Comment(models.Model):
             return self.content_object.question.id
         else:
             return None
+
+    def get_score(self):
+        return self.upvotes.count()
+
+    def voted_up_by(self, usuario):
+        return self.upvotes.filter(id=usuario.id).exists()
+
 
 class Question(models.Model):
     title = models.CharField(max_length=255)
