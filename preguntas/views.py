@@ -153,7 +153,9 @@ def question_detail(request, question_id):
             return HttpResponseRedirect(reverse('preguntas:question', args=(question_id,)))
             #return question_redirect(question_id)
         else:
-            print(form.errors)
+            return HttpResponse("{}\n<a href='{}'>Back to Question".format(
+                form.errors, reverse('preguntas:question', args=(
+                    question_id,))))
     else:
         # If the request was not a POST, display the form to enter details.
         form = AnswerForm()
@@ -183,7 +185,8 @@ def new_question(request):
             question.save()
             return HttpResponseRedirect(reverse('preguntas:question', args=(question.id,)))
         else:
-            print(form.errors)
+            return HttpResponse("{}\n<a href='{}'>Back to New Question".format(
+                form.errors, reverse('preguntas:new_question')))
     else:
         form = QuestionForm()
         context = {'form': form}
@@ -203,9 +206,12 @@ def new_comment(request, parent_type, parent_id):
             comment.content_object = get_parent_obj(parent_type, parent_id)
             comment.save()
             question_id = comment.get_question_id()
-            return HttpResponseRedirect(reverse('preguntas:question', args=(question_id,)))
+            return HttpResponseRedirect(reverse('preguntas:question',
+                                                args=(question_id,)))
         else:
-            print(form.errors)
+            return HttpResponse("{}\n<a href='{}'>Back to New Comment".format(
+                form.errors, reverse('preguntas:new_comment', args=(
+                    parent_type, parent_id))))
     else:
         parent_obj = get_parent_obj(parent_type, parent_id)
         form = CommentForm()
