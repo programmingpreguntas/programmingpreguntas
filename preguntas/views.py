@@ -1,4 +1,3 @@
-import uuid
 from django.shortcuts import render, get_object_or_404, render_to_response
 from rest_framework import viewsets
 from .models import Question, Answer, Usuario, Comment
