@@ -1,38 +1,36 @@
 {% extends 'preguntas/base.html' %}
 {% block title%} {{usuario.user.username}}'s profile {% endblock %}
 {% block content %}
-{% if user.is_authenticated %}
-  {% if user.usuario.id == usuario.id %}
-    <span>Hello {{usuario.name}}!</span>
-  {% endif %}
-  <p>
+  {% if user.is_authenticated %}
+    {% if user.usuario.id == usuario.id %}
+      <span>Hello {{usuario.name}}!</span>
+    {% endif %}
+    <p>
       Ask a <a href="{% url 'preguntas:new_question' %}">New Question</a>.
-  </p>
-{% endif %}
-{% if question_set %}
-<div class="question_set">
-    <h3>Questions Asked</h3>
-    <ul>
+    </p>
+  {% endif %}
+  {% if question_set %}
+    <div class="question_set">
+      <h3>Questions Asked</h3>
+      <ul>
         {% for question in question_set %}
-            {% with question_id=question.id %}
+          {% with question_id=question.id %}
             <li><a href="{%url 'preguntas:question' question.id%}">{{question.title}}</a></li>
-            {% endwith %}
+          {% endwith %}
         {% endfor %}
-    </ul>
-</div>
-{% endif %}
-
-{% if questions_answered_set %}
-<div class="questions_answered_set">
-    <h3>Question Answered</h3>
-<ul>
-    {% for answer in questions_answered_set %}
-    {% with answer_question_id=answer.question_id %}
-    <li><a href="{%url 'preguntas:question' answer.question_id%}">{{answer.question.title}}</a></li>
-    {% endwith %}
-    {% endfor %}
-</ul>
-</div>
-{% endif %}
-
+      </ul>
+    </div>
+  {% endif %}
+  {% if questions_answered_set %}
+    <div class="questions_answered_set">
+      <h3>Question Answered</h3>
+      <ul>
+        {% for answer in questions_answered_set %}
+          {% with answer_question_id=answer.question_id %}
+            <li><a href="{%url 'preguntas:question' answer.question_id%}">{{answer.question.title}}</a></li>
+          {% endwith %}
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
 {% endblock %}

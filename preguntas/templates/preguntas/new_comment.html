@@ -1,37 +1,30 @@
-<head>
-    <title>New Comment</title>
-</head>
-<body>
+{% extends 'preguntas/base.html' %}
+{% block title%} New Comment {% endblock %}
+{% block content %}
+  <h2>New Comment</h2>
+  <p>
+    Comment on {{parent_name}}# {{parent_obj.id}}:
+  </p>
+  {% if parent_obj.title %}
     <p>
-        Go <a href="/">Home</a>
+      Title: {{parent_obj.title}}}
     </p>
-    <h2>New Comment</h2>
-    <p>
-        Comment on {{parent_name}}# {{parent_obj.id}}:
-    </p>
-    <p>
-        {% if parent_obj.title %}
-        Title: {{parent_obj.title}}}
-        {% endif %}
-    </p>
-    <p>
-        Body: {{parent_obj.body}}
-    </p>
-    <form id="CommentForm" method="post" action="">
-
-                {% csrf_token %}
-                {% for hidden in form.hidden_fields %}
-                    {{ hidden }}
-                {% endfor %}
-
-                {% for field in form.visible_fields %}
-                    {{ field.errors }}
-                    {{ field.help_text }}
-                    <p>
-                        {{ field }}
-                    </p>
-                {% endfor %}
-
-                <input type="submit" name="submit" value="Add Comment" />
-            </form>
-</body>
+  {% endif %}
+  <p>
+    Body: {{parent_obj.body}}
+  </p>
+  <form id="CommentForm" method="post" action="">
+    {% csrf_token %}
+    {% for hidden in form.hidden_fields %}
+      {{ hidden }}
+    {% endfor %}
+    {% for field in form.visible_fields %}
+      {{ field.errors }}
+      {{ field.help_text }}
+      <p>
+        {{ field }}
+      </p>
+    {% endfor %}
+    <input type="submit" name="submit" value="Add Comment" />
+  </form>
+{% endblock %}
