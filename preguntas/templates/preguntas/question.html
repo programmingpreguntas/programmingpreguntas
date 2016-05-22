@@ -15,6 +15,9 @@
     {{question.body | linebreaksbr}}
   </p>
   <p>
+    By <a href="{% url 'preguntas:profile' question.owner_id %}">{{question.owner.user.username}}</a> on {{question.created}}
+  </p>
+  <p>
     {% vote_buttons question request %}
   </p>
   {% if question_comments %}
@@ -26,7 +29,7 @@
         {{comment.body}}
       </p>
       <p>
-        By: <a href="/profile/{{comment.owner_id}}">{{comment.owner}}</a> on {{comment.created}}
+        By: <a href="/profile/{{comment.owner_id}}">{{comment.owner.user.username}}</a> on {{comment.created}}
       </p>
       <p>
         {% vote_buttons comment request %}
@@ -50,7 +53,7 @@
         {{answer.body | linebreaksbr}}
       </p>
       <p>
-        By <a href="/profile/{{answer.owner_id}}">{{answer.owner}}</a> on {{answer.created}}
+        By <a href="/profile/{{answer.owner_id}}">{{answer.owner.user.username}}</a> on {{answer.created}}
       </p>
       {% if answer.get_comments %}
         <p>
@@ -61,7 +64,7 @@
             {{comment.body}}
           </p>
           <p>
-            By: <a href="/profile/{{comment.owner_id}}">{{comment.owner}}</a> on {{comment.created}}
+            By: <a href="/profile/{{comment.owner_id}}">{{comment.owner.user.username}}</a> on {{comment.created}}
           </p>
           <p>
             {% vote_buttons comment request %}

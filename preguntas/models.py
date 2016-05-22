@@ -15,7 +15,10 @@ class Usuario(models.Model):
     def _get_votable_points(self, VotableType):
         my_votables = VotableType.objects.filter(owner=self)
         votable_points = my_votables.annotate(points=Count('upvotes')).aggregate(sum=Sum('points'))['sum']
-        return votable_points
+        if votable_points is None:
+            return 0
+        else:
+            return votable_points
 
     def get_points(self):
         question_points = self._get_votable_points(Question)
