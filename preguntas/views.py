@@ -7,7 +7,7 @@ from django.contrib.auth import authenticate, login
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.views.generic import ListView
-from .utilities import get_query
+from .utilities import get_query, get_parent_obj
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import auth
 from django.core.context_processors import csrf
@@ -15,15 +15,6 @@ from .forms import AnswerForm, QuestionForm, CommentForm
 from django.apps import apps
 from django.core.urlresolvers import reverse
 from django.db.models import Count
-
-
-
-def get_parent_obj(parent_type, parent_id):
-    if parent_type == "Question":
-        parent_obj = get_object_or_404(Question, id=parent_id)
-    else:
-        parent_obj = get_object_or_404(Answer, id=parent_id)
-    return parent_obj
 
 
 def profile(request, usuario_id=None):
