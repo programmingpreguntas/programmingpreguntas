@@ -28,7 +28,10 @@ def get_parent_obj(parent_type, parent_id):
 
 def profile(request, usuario_id=None):
     if usuario_id is None:
-        usuario_id = request.user.usuario.id
+        try:
+            usuario_id = request.user.usuario.id
+        except AttributeError:
+            return render(request, 'preguntas/please_login.html')
     usuario = get_object_or_404(Usuario, id=usuario_id)
     question_set = Question.objects.filter(owner_id=usuario_id)
     questions_answered_set = Answer.objects.filter(owner_id=usuario_id)
@@ -51,7 +54,7 @@ class QuestionList(ListView):
         if 'queryset' in self.kwargs:
             return self.kwargs['queryset']
         else:
-            return super(ListView, self).get_queryset()
+            return super(ListView, self).get_queryset().order_by('-created')
 
 
 # Search copied from http://julienphalip.com/post/2825034077/adding-search-to-a-django-site-in-a-snap
@@ -69,7 +72,7 @@ class QuestionViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows abilities to be viewed or edited.
     """
-    queryset = Question.objects.all().annotate(score=Count("upvotes")).order_by('-score','-created')
+    queryset = Question.objects.all().annotate(score=Count("upvotes")).order_by('-score', '-created')
     serializer_class = QuestionSerializer
 
 
@@ -145,13 +148,9 @@ def question_detail(request, question_id):
         if form.is_valid():
             answer = form.save(commit=False)
             answer.question = Question.objects.get(id=question_id)
-            try:
-                answer.owner = Usuario.objects.get(id=request.user.usuario.id)
-            except AttributeError:
-                answer.owner = Usuario.objects.get(id=12) # if anon user, make it user 163 for now.
+            answer.owner = Usuario.objects.get(id=request.user.usuario.id)
             answer.save()
             return HttpResponseRedirect(reverse('preguntas:question', args=(question_id,)))
-            #return question_redirect(question_id)
         else:
             return HttpResponse("{}\n<a href='{}'>Back to Question".format(
                 form.errors, reverse('preguntas:question', args=(
