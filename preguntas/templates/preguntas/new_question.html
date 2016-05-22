@@ -2,9 +2,6 @@
 {% block title%} New Question {% endblock %}
 {% block content %}
 
-    <p>
-        Go <a href="{%url 'preguntas:questions'%}">Home</a>
-    </p>
     <h2>New Question</h2>
     <form id="QuestionForm" method="post" action="">
 
@@ -21,6 +18,6 @@
                     </p>
                 {% endfor %}
 
-                <input type="submit" name="submit" value="Add Answer" />
+                <input type="submit" name="submit" value="Add Question" />
             </form>
 {% endblock %}

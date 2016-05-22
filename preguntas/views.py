@@ -1,7 +1,7 @@
 import uuid
 from django.shortcuts import render, get_object_or_404, render_to_response
 from rest_framework import viewsets
-from .models import Question, Answer, Usuario
+from .models import Question, Answer, Usuario, Comment
 from .serializers import QuestionSerializer, AnswerSerializer, UsuarioSerializer
 from django.contrib.auth import authenticate, login
 from django.shortcuts import redirect
@@ -11,9 +11,18 @@ from .utilities import get_query
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import auth
 from django.core.context_processors import csrf
-from .forms import AnswerForm, QuestionForm
+from .forms import AnswerForm, QuestionForm, CommentForm
 from django.apps import apps
+from django.core.urlresolvers import reverse
 
+
+
+def get_parent_obj(parent_type, parent_id):
+    if parent_type == "Question":
+        parent_obj = get_object_or_404(Question, id=parent_id)
+    else:
+        parent_obj = get_object_or_404(Answer, id=parent_id)
+    return parent_obj
 
 
 def profile(request, usuario_id):
@@ -39,7 +48,7 @@ class QuestionList(ListView):
         if 'queryset' in self.kwargs:
             return self.kwargs['queryset']
         else:
-            return super().get_queryset()
+            return super(ListView, self).get_queryset()
 
 
 # Search copied from http://julienphalip.com/post/2825034077/adding-search-to-a-django-site-in-a-snap
@@ -94,6 +103,9 @@ def index(request):
 def login_user(request):
     c = {}
     c.update(csrf(request))
+    request.session['fav_color'] = 'blue'
+
+    print(request.session)
     return render_to_response('login.html', c)
 
 
@@ -105,9 +117,10 @@ def auth_view(request):
     if user is not None:
         if user.is_active:
             login(request, user)
-            state = "You're successfully logged in!"
-            return HttpResponse(state)
-            # return redirect()
+            state = "You're successfully logged in"
+            #return HttpResponse(state)
+            print(type(user.id))
+            return HttpResponseRedirect('/profile/%s' % user.id)
 
         else:
             state = "Your account is not active, please contact the site admin."
@@ -117,15 +130,10 @@ def auth_view(request):
             # return redirect()
     else:
         state = "Your username and/or password were incorrect."
-        context = {'errors': [state]}
-        return render(request, 'login.html', context)
-        #return HttpResponse(state)
+        # context = {'errors': [state]}
+        # return render(request, 'login.html', context)
+        return HttpResponse(state)
         # return redirect()
-
-
-def question_redirect(request, question_id):
-    url = '/questions/{}/'.format(question_id)
-    return HttpResponseRedirect(url)
 
 
 def question_detail(request, question_id):
@@ -137,18 +145,21 @@ def question_detail(request, question_id):
             try:
                 answer.owner = Usuario.objects.get(id=request.user.usuario.id)
             except AttributeError:
-                answer.owner = Usuario.objects.get(id=163) # if anon user, make it user 163 for now.
+                answer.owner = Usuario.objects.get(id=12) # if anon user, make it user 163 for now.
             answer.save()
-            return question_redirect(request, question_id)
+            return HttpResponseRedirect(reverse('preguntas:question', args=(question_id,)))
+            #return question_redirect(question_id)
         else:
             print(form.errors)
     else:
         # If the request was not a POST, display the form to enter details.
         form = AnswerForm()
     question = Question.objects.get(id=question_id)
+    question_comments = question.get_comments()
     answers = Answer.objects.filter(question_id=question.id)
     context = {'form': form,
                'question': question,
+               'question_comments': question_comments,
                'answers': answers}
     return render(request, 'preguntas/question.html', context)
 
@@ -161,15 +172,42 @@ def new_question(request):
             try:
                 question.owner = Usuario.objects.get(id=request.user.usuario.id)
             except AttributeError:
-                question.owner = Usuario.objects.get(id=100) # if anon user, make it user 163 for now.
+                # if anon user, make it user 163 for now.
+                question.owner = Usuario.objects.get(id=1)
+
             question.save()
-            return question_redirect(request, question.id)
+            return HttpResponseRedirect(reverse('preguntas:question', args=(question.id,)))
         else:
             print(form.errors)
     else:
         form = QuestionForm()
         context = {'form': form}
         return render(request, 'preguntas/new_question.html', context)
+
+
+def new_comment(request, parent_type, parent_id):
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            try:
+                comment.owner = Usuario.objects.get(id=request.user.usuario.id)
+            except AttributeError:
+                # if anon user, make it user 163 for now.
+                comment.owner = Usuario.objects.get(id=100)
+            comment.content_object = get_parent_obj(parent_type, parent_id)
+            comment.save()
+            question_id = comment.get_question_id()
+            return HttpResponseRedirect(reverse('preguntas:question', args=(question_id,)))
+        else:
+            print(form.errors)
+    else:
+        parent_obj = get_parent_obj(parent_type, parent_id)
+        form = CommentForm()
+        context = {'form': form,
+                   'parent_obj': parent_obj,
+                   'parent_name': parent_obj.__class__.__name__}
+        return render(request, 'preguntas/new_comment.html', context)
 
 
 def vote(request):
@@ -181,6 +219,6 @@ def vote(request):
         try:
             votable.upvotes.add(Usuario.objects.get(id=request.user.usuario.id))
         except AttributeError:
-            votable.upvotes.add(Usuario.objects.get(id=100))
+            votable.upvotes.add(Usuario.objects.get(id=1))
 
     return HttpResponseRedirect(request.POST['this_url'])
