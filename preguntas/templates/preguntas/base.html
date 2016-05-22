@@ -14,39 +14,35 @@
       body{
         padding-top: 70px
       }
-      </style>
+    </style>
   </head>
   <body>
-
-
     <nav class="navbar navbar-fixed-top navbar-light bg-faded">
       <a class="navbar-brand" href="{% url 'preguntas:questions' %}">ProgramingPreguntas</a>
       <ul class="nav navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'preguntas:login' %}">Login</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'preguntas:login' %}">Register</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'preguntas:profile' 1 %}">Profile</a>
-        </li>
 
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'preguntas:logout_user' %}">Logout</a>
-        </li>
+        {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'preguntas:my_profile' %}">Profile</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'preguntas:logout_user' %}">Logout</a>
+          </li>
+        {% else %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'preguntas:login' %}">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'preguntas:login' %}">Register</a>
+          </li>
+        {% endif %}
 
       </ul>
-      <!-- <form class="form_inline navbar-form" action="{% url 'preguntas:login' %}">
-          <input class="btn btn-success-outline" type="submit" value="Log in">
-      </form> -->
       <form class="form-inline navbar-form pull-xs-right" id="searchBar" action="{%url 'preguntas:search'%}" method="get">
         <input class="form-control" type="text" name="q" value="Search Questions">
         <button class="btn btn-success-outline" type="submit">Search</button>
       </form>
     </nav>
-
-
     {% block content %}
     {% endblock %}
     <!-- jQuery first, then Bootstrap JS. -->

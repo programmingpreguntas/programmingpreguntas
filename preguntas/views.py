@@ -7,25 +7,19 @@ from django.contrib.auth import authenticate, login
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.views.generic import ListView
-from .utilities import get_query
+from .utilities import get_query, get_parent_obj
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import auth
 from django.core.context_processors import csrf
 from .forms import AnswerForm, QuestionForm, CommentForm
 from django.apps import apps
 from django.core.urlresolvers import reverse
+from django.db.models import Count
 
 
-
-def get_parent_obj(parent_type, parent_id):
-    if parent_type == "Question":
-        parent_obj = get_object_or_404(Question, id=parent_id)
-    else:
-        parent_obj = get_object_or_404(Answer, id=parent_id)
-    return parent_obj
-
-
-def profile(request, usuario_id):
+def profile(request, usuario_id=None):
+    if usuario_id is None:
+        usuario_id = request.user.usuario.id
     usuario = get_object_or_404(Usuario, id=usuario_id)
     question_set = Question.objects.filter(owner_id=usuario_id)
     questions_answered_set = Answer.objects.filter(owner_id=usuario_id)
@@ -66,7 +60,7 @@ class QuestionViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows abilities to be viewed or edited.
     """
-    queryset = Question.objects.all().order_by('created')
+    queryset = Question.objects.all().annotate(score=Count("upvotes")).order_by('-score','-created')
     serializer_class = QuestionSerializer
 
 
@@ -74,7 +68,7 @@ class AnswerViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows abilities to be viewed or edited.
     """
-    queryset = Answer.objects.all().order_by('created')
+    queryset = Answer.objects.all().annotate(score=Count("upvotes")).order_by('-score','-created')
     serializer_class = AnswerSerializer
 
 
@@ -158,17 +152,21 @@ def question_detail(request, question_id):
             return HttpResponseRedirect(reverse('preguntas:question', args=(question_id,)))
             #return question_redirect(question_id)
         else:
-            print(form.errors)
+            return HttpResponse("{}\n<a href='{}'>Back to Question".format(
+                form.errors, reverse('preguntas:question', args=(
+                    question_id,))))
     else:
         # If the request was not a POST, display the form to enter details.
         form = AnswerForm()
     question = Question.objects.get(id=question_id)
     question_comments = question.get_comments()
-    answers = Answer.objects.filter(question_id=question.id)
+    answers = Answer.objects.filter(question_id=question.id).annotate(score=Count("upvotes")).order_by('-score','-created')
+    i_have_answered = answers.filter(owner_id=request.user.usuario.id).exists()
     context = {'form': form,
                'question': question,
                'question_comments': question_comments,
-               'answers': answers}
+               'answers': answers,
+               'i_have_answered': i_have_answered}
     return render(request, 'preguntas/question.html', context)
 
 
@@ -186,7 +184,8 @@ def new_question(request):
             question.save()
             return HttpResponseRedirect(reverse('preguntas:question', args=(question.id,)))
         else:
-            print(form.errors)
+            return HttpResponse("{}\n<a href='{}'>Back to New Question".format(
+                form.errors, reverse('preguntas:new_question')))
     else:
         form = QuestionForm()
         context = {'form': form}
@@ -206,9 +205,12 @@ def new_comment(request, parent_type, parent_id):
             comment.content_object = get_parent_obj(parent_type, parent_id)
             comment.save()
             question_id = comment.get_question_id()
-            return HttpResponseRedirect(reverse('preguntas:question', args=(question_id,)))
+            return HttpResponseRedirect(reverse('preguntas:question',
+                                                args=(question_id,)))
         else:
-            print(form.errors)
+            return HttpResponse("{}\n<a href='{}'>Back to New Comment".format(
+                form.errors, reverse('preguntas:new_comment', args=(
+                    parent_type, parent_id))))
     else:
         parent_obj = get_parent_obj(parent_type, parent_id)
         form = CommentForm()

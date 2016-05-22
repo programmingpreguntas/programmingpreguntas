@@ -1,30 +1,28 @@
 {% extends 'preguntas/base.html' %}
 
 {% block content %}
-
-  Ask a <a href="{% url 'preguntas:new_question' %}">New Question</a>
+  {% if user.is_authenticated %}
+    <span>Ask a <a href="{% url 'preguntas:new_question' %}">New Question</a></span>
+  {% endif %}
   <h2>Most Recent Questions</h2>
-
   {% if question_list %}
-  <ul>
-    {% for question in question_list %}
-    <li> <a href="{%url 'preguntas:question' question.id%}">{{ question }}</a></li>
-    {% endfor %}
-  </ul>
-  <span class="step-links">
-          {% if page_obj.has_previous %}
-              <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-          {% endif %}
-
-          <span class="current">
-              Page {{ page_obj.number }} of {{ paginator.num_pages }}.
-          </span>
-
-          {% if page_obj.has_next %}
-              <a href="?page={{ page_obj.next_page_number }}">next</a>
-          {% endif %}
+    <ul>
+      {% for question in question_list %}
+        <li> <a href="{%url 'preguntas:question' question.id%}">{{ question }}</a></li>
+      {% endfor %}
+    </ul>
+    <span class="step-links">
+      {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+      {% endif %}
+      <span class="current">
+        Page {{ page_obj.number }} of {{ paginator.num_pages }}.
       </span>
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">next</a>
+      {% endif %}
+    </span>
   {% else %}
-  <p>No questions are available</p>
+    <p>No questions are available</p>
   {% endif %}
 {% endblock %}

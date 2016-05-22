@@ -69,3 +69,4 @@ target/
 .direnv
 .DS_Store
 .env
+acdump.txt
