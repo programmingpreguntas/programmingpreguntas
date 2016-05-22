@@ -116,10 +116,10 @@ def auth_view(request):
 
     if user is not None:
         if user.is_active:
-            login(request, user)
+            auth.login(request, user)
             state = "You're successfully logged in"
             #return HttpResponse(state)
-            print(type(user.id))
+            #print(auth.user_logged_in)
             return HttpResponseRedirect('/profile/%s' % user.id)
 
         else:
@@ -134,6 +134,14 @@ def auth_view(request):
         # return render(request, 'login.html', context)
         return HttpResponse(state)
         # return redirect()
+
+def logout_user(request):
+        auth.logout(request)
+        return redirect(reverse('preguntas:questions'))
+        #return HttpResponseRedirect('question')
+        #return render_to_response('question')
+
+
 
 
 def question_detail(request, question_id):
