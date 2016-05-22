@@ -24,10 +24,13 @@
         {% if user.is_authenticated %}
           <li class="nav-item">
             <a class="nav-link" href="{% url 'preguntas:my_profile' %}">Profile</a>
+
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'preguntas:logout_user' %}">Logout</a>
           </li>
+          <li class='nav-item'>
+            <a class="nav-link" href="{% url 'preguntas:new_question' %}">New Question</a></li>
         {% else %}
           <li class="nav-item">
             <a class="nav-link" href="{% url 'preguntas:login' %}">Login</a>
