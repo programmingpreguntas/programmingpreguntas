@@ -1,0 +1,8 @@
+{% extends 'preguntas/base.html' %}
+{% block title%} Please Log In {% endblock %}
+{% block content %}
+  <h2>You must be logged in to access this page</h2>
+  <p>
+    Please <a href="{% url 'preguntas:login' %}">log-in</a> or <a href="{% url 'preguntas:register' %}">register</a>.
+  </p>
+{% endblock %}
