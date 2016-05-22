@@ -7,7 +7,7 @@ from django.contrib.auth import authenticate, login
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.views.generic import ListView
-from .utilities import get_query
+from .utilities import get_query, get_parent_obj
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import auth
 from django.core.context_processors import csrf
@@ -15,15 +15,6 @@ from .forms import AnswerForm, QuestionForm, CommentForm
 from django.apps import apps
 from django.core.urlresolvers import reverse
 from django.db.models import Count
-
-
-
-def get_parent_obj(parent_type, parent_id):
-    if parent_type == "Question":
-        parent_obj = get_object_or_404(Question, id=parent_id)
-    else:
-        parent_obj = get_object_or_404(Answer, id=parent_id)
-    return parent_obj
 
 
 def profile(request, usuario_id=None):
@@ -122,10 +113,10 @@ def auth_view(request):
 
     if user is not None:
         if user.is_active:
-            login(request, user)
+            auth.login(request, user)
             state = "You're successfully logged in"
             #return HttpResponse(state)
-            print(type(user.id))
+            #print(auth.user_logged_in)
             return HttpResponseRedirect('/profile/%s' % user.id)
 
         else:
@@ -140,6 +131,14 @@ def auth_view(request):
         # return render(request, 'login.html', context)
         return HttpResponse(state)
         # return redirect()
+
+def logout_user(request):
+        auth.logout(request)
+        return redirect(reverse('preguntas:questions'))
+        #return HttpResponseRedirect('question')
+        #return render_to_response('question')
+
+
 
 
 def question_detail(request, question_id):

@@ -6,6 +6,7 @@ from psycopg2 import IntegrityError as psyIntegrityError
 from django.db.utils import IntegrityError as djaIntegrityError
 import re
 from django.db.models import Q
+from django.shortcuts import get_object_or_404
 
 
 RANDOM_TEXT = open("preguntas/lorem.txt", "r").read()
@@ -135,3 +136,11 @@ def get_query(query_string, search_fields):
         else:
             query = query & or_query
     return query
+
+
+def get_parent_obj(parent_type, parent_id):
+    if parent_type == "Question":
+        parent_obj = get_object_or_404(Question, id=parent_id)
+    else:
+        parent_obj = get_object_or_404(Answer, id=parent_id)
+    return parent_obj
