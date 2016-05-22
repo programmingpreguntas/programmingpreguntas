@@ -15,6 +15,7 @@ from .forms import AnswerForm, QuestionForm, CommentForm
 from django.apps import apps
 from django.core.urlresolvers import reverse
 from django.db.models import Count
+from django.contrib.auth.forms import UserCreationForm
 
 
 
@@ -123,7 +124,7 @@ def auth_view(request):
             state = "You're successfully logged in"
             #return HttpResponse(state)
             print(type(user.id))
-            return HttpResponseRedirect('/profile/%s' % user.id)
+            return HttpResponseRedirect('/profile/%s' % user.usuario.id)
 
         else:
             state = "Your account is not active, please contact the site admin."
@@ -227,3 +228,23 @@ def vote(request):
             votable.upvotes.add(Usuario.objects.get(id=1))
 
     return HttpResponseRedirect(request.POST['this_url'])
+
+def register_user(request):
+    if request.method == 'POST':
+        print('POST')
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            Usuario(name=user.username, user=user).save()
+            return HttpResponseRedirect(reverse('preguntas:register_success'))
+        else:
+            output = form.errors.as_json()
+            return HttpResponse(output)
+    args = {}
+    args.update(csrf(request))
+    args['form'] = UserCreationForm()
+
+    return render_to_response('preguntas/register.html', args)
+
+def register_success(request):
+    return render_to_response('preguntas/register_success.html')
