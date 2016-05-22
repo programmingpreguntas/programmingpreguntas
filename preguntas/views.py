@@ -221,7 +221,11 @@ def vote(request):
         vote_id = request.POST['votable_id']
         preguntas_config = apps.get_app_config("preguntas")
         votable = preguntas_config.get_model(model_name).objects.get(id=vote_id)
-        votable.upvotes.add(Usuario.objects.get(id=request.user.usuario.id))
+        usario_add = Usuario.objects.get(id=request.user.usuario.id)
+        if votable.upvotes.filter(id=usario_add.id).exists():
+            votable.upvotes.remove(usario_add)
+        else:
+            votable.upvotes.add(usario_add)
     return HttpResponseRedirect(request.POST['this_url'])
 
 def register_user(request):
