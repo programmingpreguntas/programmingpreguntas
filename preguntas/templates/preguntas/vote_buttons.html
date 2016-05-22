@@ -6,4 +6,7 @@
     <input type='hidden' name='this_url' value="{{request.get_full_path}}">
     <input class="btn btn-sm {% if voted_up %} btn-success{% endif %}" type="submit" name="name" value="👍">
   </form>
+  <p>
+    {{score}}
+  </p>
 {% endif %}

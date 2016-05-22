@@ -2,6 +2,9 @@
 {% block title%} {{question.title}} {% endblock %}
 {% block content %}
 {% load custom_template_tags %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-8 col-md-offset-2">
 <p>
 Question # {{question.id}}
 </p>
@@ -75,7 +78,7 @@ Question # {{question.id}}
     <hr>
     {% endfor %}
 {% endif %}
-
+{% if user.is_authenticated and not i_have_answered%}
 <form id="AnswerForm" method="post" action="">
 
             {% csrf_token %}
@@ -93,4 +96,8 @@ Question # {{question.id}}
 
             <input type="submit" name="submit" value="Add Answer" />
         </form>
+  {% endif %}
+    </div>
+  </div>
+</div>
 {% endblock %}
