@@ -2,6 +2,9 @@
 {% block title%} {{question.title}} {% endblock %}
 {% block content %}
 {% load custom_template_tags %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-8 col-md-offset-2">
 <p>
 Question # {{question.id}}
 </p>
@@ -25,7 +28,7 @@ Question # {{question.id}}
     {{comment.body}}
 </p>
 <p>
-    By: <a href="/profile/{{comment.owner_id}}">{{comment.owner}}</a> on {{comment.created}}.
+    By: <a href="/profile/{{comment.owner_id}}">{{comment.owner}}</a> on {{comment.created}}
 </p>
     {% endfor %}
     {% endif %}
@@ -47,7 +50,7 @@ Question # {{question.id}}
         {{answer.body | linebreaksbr}}
     </p>
     <p>
-        By <a href="/profile/{{answer.owner_id}}">{{answer.owner}}</a> on {{answer.created}}.
+        By <a href="/profile/{{answer.owner_id}}">{{answer.owner}}</a> on {{answer.created}}
     </p>
     {% if answer.get_comments %}
     <p>
@@ -59,7 +62,7 @@ Question # {{question.id}}
         {{comment.body}}
     </p>
     <p>
-        By: <a href="/profile/{{comment.owner_id}}">{{comment.owner}}</a> on {{comment.created}}.
+        By: <a href="/profile/{{comment.owner_id}}">{{comment.owner}}</a> on {{comment.created}}
     </p>
         {% endfor %}
         {% endif %}
@@ -67,7 +70,7 @@ Question # {{question.id}}
         {% with answer_id=answer.id %}
         Add a <a href="{% url 'preguntas:new_comment' "Answer" answer_id %}">New Comment</a>
         {% endwith %}
-        By <a href="{% url 'preguntas:profile' answer.owner.id%}">{{answer.owner}}</a> on {{answer.created}}.
+        <!-- By <a href="{% url 'preguntas:profile' answer.owner.id%}">{{answer.owner}}</a> on {{answer.created}}. -->
     </p>
     <p>
       {%vote_buttons answer request%}
@@ -75,7 +78,7 @@ Question # {{question.id}}
     <hr>
     {% endfor %}
 {% endif %}
-
+{% if user.is_authenticated and not i_have_answered%}
 <form id="AnswerForm" method="post" action="">
 
             {% csrf_token %}
@@ -93,4 +96,8 @@ Question # {{question.id}}
 
             <input type="submit" name="submit" value="Add Answer" />
         </form>
+  {% endif %}
+    </div>
+  </div>
+</div>
 {% endblock %}

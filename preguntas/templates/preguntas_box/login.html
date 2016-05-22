@@ -1,4 +1,6 @@
-
+{% extends 'preguntas/base.html' %}
+{% block title%} New Question {% endblock %}
+{% block content %}
 	{% if form.errors %}
 
 		<p class='error'> Sorry......, that's not a valid username or password' </p>
@@ -14,3 +16,4 @@
 
 		<input type="submit" value="Log In"/>
 	</form>
+{% endblock %}

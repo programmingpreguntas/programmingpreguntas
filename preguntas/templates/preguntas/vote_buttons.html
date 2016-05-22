@@ -1,7 +1,12 @@
-<form class="" action="{%url "preguntas:vote"%}" method="post">
-  {% csrf_token %}
-  <input type="hidden" name="votable_type" value="{{votable_type}}">
-  <input type="hidden" name="votable_id" value="{{votable_id}}">
-  <input type='hidden' name='this_url' value="{{request.get_full_path}}">
-  <input class="btn btn-sm {% if voted_up %} btn-success{% endif %}" type="submit" name="name" value="👍">
-</form>
+{% if request.user.is_authenticated %}
+  <form class="" action="{%url "preguntas:vote"%}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="votable_type" value="{{votable_type}}">
+    <input type="hidden" name="votable_id" value="{{votable_id}}">
+    <input type='hidden' name='this_url' value="{{request.get_full_path}}">
+    <input class="btn btn-sm {% if voted_up %} btn-success{% endif %}" type="submit" name="name" value="👍">
+  </form>
+  <p>
+    {{score}}
+  </p>
+{% endif %}

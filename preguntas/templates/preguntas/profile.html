@@ -1,11 +1,14 @@
 {% extends 'preguntas/base.html' %}
-{% block title%} {{usuario.name}}'s profile {% endblock %}
+{% block title%} {{usuario.user.username}}'s profile {% endblock %}
 {% block content %}
-Hello {{usuario.name}}!
-
-<p>
-    Ask a <a href="{% url 'preguntas:new_question' %}">New Question</a>.
-</p>
+{% if user.is_authenticated %}
+  {% if user.usuario.id == usuario.id %}
+    <span>Hello {{usuario.name}}!</span>
+  {% endif %}
+  <p>
+      Ask a <a href="{% url 'preguntas:new_question' %}">New Question</a>.
+  </p>
+{% endif %}
 {% if question_set %}
 <div class="question_set">
     <h3>Questions Asked</h3>
@@ -25,7 +28,7 @@ Hello {{usuario.name}}!
 <ul>
     {% for answer in questions_answered_set %}
     {% with answer_question_id=answer.question_id %}
-    <li><a href="{%url 'preguntas:question' answer.question_id%}">{{answer}}&hellip;</a></li>
+    <li><a href="{%url 'preguntas:question' answer.question_id%}">{{answer.question.title}}</a></li>
     {% endwith %}
     {% endfor %}
 </ul>
