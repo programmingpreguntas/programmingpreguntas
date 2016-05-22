@@ -196,11 +196,9 @@ def new_comment(request, parent_type, parent_id):
         form = CommentForm(request.POST)
         if form.is_valid():
             comment = form.save(commit=False)
-            try:
-                comment.owner = Usuario.objects.get(id=request.user.usuario.id)
-            except AttributeError:
-                # if anon user, make it user 163 for now.
-                comment.owner = Usuario.objects.get(id=100)
+            if not request.user.is_authenticated():
+                return HttpResponse("Stop hacking")
+            comment.owner = Usuario.objects.get(id=request.user.usuario.id)
             comment.content_object = get_parent_obj(parent_type, parent_id)
             comment.save()
             question_id = comment.get_question_id()

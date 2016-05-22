@@ -27,11 +27,13 @@
       </p>
     {% endfor %}
   {% endif %}
-  <p>
-    {% with question_id=question.id %}
-      Add a <a href="{% url 'preguntas:new_comment' "Question" question_id %}">New Comment</a>
-    {% endwith %}
-  </p>
+  {% if user.is_authenticated%}
+    <p>
+      {% with question_id=question.id %}
+        Add a <a href="{% url 'preguntas:new_comment' "Question" question_id %}">New Comment</a>
+      {% endwith %}
+    </p>
+  {% endif %}
   <p>
     {% vote_buttons question request %}
   </p>
