@@ -16,6 +16,9 @@ urlpatterns = [
     url(r'^question/new$', views.new_question, name='new_question'),
     url(r'^comment/new/(?P<parent_type>[a-zA-Z]+)/(?P<parent_id>[0-9]+)/$',
         views.new_comment, name='new_comment'),
-    url(r'^vote/$', views.vote, name="vote")
-
+    url(r'^vote/$', views.vote, name="vote"),
+    url(r'^register/$', views.register_user, name='register_user'),
+    url(r'^register_success/$', views.register_success, name='register_success'),
+    url(r'^logout/$', views.logout_user, name='logout_user'),
+    #url(r'^logout/question_list$', views.QuestionList.as_view(), name='questions'),
 ]

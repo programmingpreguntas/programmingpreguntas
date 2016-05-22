@@ -14,11 +14,15 @@ from .forms import AnswerForm, QuestionForm, CommentForm
 from django.apps import apps
 from django.core.urlresolvers import reverse
 from django.db.models import Count
+from django.contrib.auth.forms import UserCreationForm
 
 
 def profile(request, usuario_id=None):
     if usuario_id is None:
-        usuario_id = request.user.usuario.id
+        try:
+            usuario_id = request.user.usuario.id
+        except AttributeError:
+            return render(request, 'preguntas/please_login.html')
     usuario = get_object_or_404(Usuario, id=usuario_id)
     question_set = Question.objects.filter(owner_id=usuario_id)
     questions_answered_set = Answer.objects.filter(owner_id=usuario_id)
@@ -41,7 +45,7 @@ class QuestionList(ListView):
         if 'queryset' in self.kwargs:
             return self.kwargs['queryset']
         else:
-            return super(ListView, self).get_queryset()
+            return super(ListView, self).get_queryset().order_by('-created')
 
 
 # Search copied from http://julienphalip.com/post/2825034077/adding-search-to-a-django-site-in-a-snap
@@ -59,7 +63,7 @@ class QuestionViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows abilities to be viewed or edited.
     """
-    queryset = Question.objects.all().annotate(score=Count("upvotes")).order_by('-score','-created')
+    queryset = Question.objects.all().annotate(score=Count("upvotes")).order_by('-score', '-created')
     serializer_class = QuestionSerializer
 
 
@@ -109,11 +113,10 @@ def auth_view(request):
 
     if user is not None:
         if user.is_active:
-            login(request, user)
+            auth.login(request, user)
             state = "You're successfully logged in"
             #return HttpResponse(state)
-            print(type(user.id))
-            return HttpResponseRedirect('/profile/%s' % user.id)
+            return HttpResponseRedirect(reverse("preguntas:my_profile"))
 
         else:
             state = "Your account is not active, please contact the site admin."
@@ -128,6 +131,14 @@ def auth_view(request):
         return HttpResponse(state)
         # return redirect()
 
+def logout_user(request):
+        auth.logout(request)
+        return redirect(reverse('preguntas:questions'))
+        #return HttpResponseRedirect('question')
+        #return render_to_response('question')
+
+
+
 
 def question_detail(request, question_id):
     if request.method == 'POST':
@@ -135,13 +146,9 @@ def question_detail(request, question_id):
         if form.is_valid():
             answer = form.save(commit=False)
             answer.question = Question.objects.get(id=question_id)
-            try:
-                answer.owner = Usuario.objects.get(id=request.user.usuario.id)
-            except AttributeError:
-                answer.owner = Usuario.objects.get(id=12) # if anon user, make it user 163 for now.
+            answer.owner = Usuario.objects.get(id=request.user.usuario.id)
             answer.save()
             return HttpResponseRedirect(reverse('preguntas:question', args=(question_id,)))
-            #return question_redirect(question_id)
         else:
             return HttpResponse("{}\n<a href='{}'>Back to Question".format(
                 form.errors, reverse('preguntas:question', args=(
@@ -223,3 +230,23 @@ def vote(request):
             votable.upvotes.add(Usuario.objects.get(id=1))
 
     return HttpResponseRedirect(request.POST['this_url'])
+
+def register_user(request):
+    if request.method == 'POST':
+        print('POST')
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            Usuario(name=user.username, user=user).save()
+            return HttpResponseRedirect(reverse('preguntas:register_success'))
+        else:
+            output = form.errors.as_json()
+            return HttpResponse(output)
+    args = {}
+    args.update(csrf(request))
+    args['form'] = UserCreationForm()
+
+    return render_to_response('preguntas/register.html', args)
+
+def register_success(request):
+    return render_to_response('preguntas/register_success.html')
