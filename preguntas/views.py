@@ -25,7 +25,9 @@ def get_parent_obj(parent_type, parent_id):
     return parent_obj
 
 
-def profile(request, usuario_id):
+def profile(request, usuario_id=None):
+    if usuario_id is None:
+        usuario_id = request.user.usuario.id
     usuario = get_object_or_404(Usuario, id=usuario_id)
     question_set = Question.objects.filter(owner_id=usuario_id)
     questions_answered_set = Answer.objects.filter(owner_id=usuario_id)
