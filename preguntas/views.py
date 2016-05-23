@@ -219,13 +219,24 @@ def vote(request):
     if request.method == "POST":
         model_name = request.POST['votable_type']
         vote_id = request.POST['votable_id']
+        vote_direction = request.POST['vote_direction']
         preguntas_config = apps.get_app_config("preguntas")
         votable = preguntas_config.get_model(model_name).objects.get(id=vote_id)
         usario_add = Usuario.objects.get(id=request.user.usuario.id)
-        if votable.upvotes.filter(id=usario_add.id).exists():
-            votable.upvotes.remove(usario_add)
+        upvoted = votable.upvotes.filter(id=usario_add.id).exists()
+        downvoted = votable.downvotes.filter(id=usario_add.id).exists()
+        if vote_direction == "up":
+            if upvoted and not downvoted:
+                votable.upvotes.remove(usario_add)
+            else:
+                votable.upvotes.add(usario_add)
+                votable.downvotes.remove(usario_add)
         else:
-            votable.upvotes.add(usario_add)
+            if downvoted and not upvoted:
+                votable.downvotes.remove(usario_add)
+            else:
+                votable.downvotes.add(usario_add)
+                votable.upvotes.remove(usario_add)
     return HttpResponseRedirect(request.POST['this_url'])
 
 def register_user(request):

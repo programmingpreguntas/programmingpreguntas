@@ -4,11 +4,21 @@
     <input type="hidden" name="votable_type" value="{{votable_type}}">
     <input type="hidden" name="votable_id" value="{{votable_id}}">
     <input type='hidden' name='this_url' value="{{request.get_full_path}}">
+    <input type="hidden" name="vote_direction" value="up">
     <input class="btn btn-sm {% if voted_up %} btn-success{% endif %}" type="submit" name="name" value="👍">
   </form>
-  <p>
+  <span>
     {{score}}
-  </p>
+  </span>
+  <form class="" action="{%url "preguntas:vote"%}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="votable_type" value="{{votable_type}}">
+    <input type="hidden" name="votable_id" value="{{votable_id}}">
+    <input type='hidden' name='this_url' value="{{request.get_full_path}}">
+    <input type="hidden" name="vote_direction" value="down">
+    <input class="btn btn-sm {% if voted_down %} btn-danger{% endif %}" type="submit" name="name" value="👎">
+  </form>
+
 {%else%}
   <span>{{score}} points.</span>
 {% endif %}
