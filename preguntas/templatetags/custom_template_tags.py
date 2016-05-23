@@ -9,8 +9,9 @@ def vote_buttons(votable, request):
         return {'votable_id': votable.id,
                 "votable_type": votable.__class__.__name__,
                 "voted_up": votable.voted_up_by(Usuario.objects.get(id=request.user.usuario.id)),
+                "voted_down": votable.voted_down_by(Usuario.objects.get(id=request.user.usuario.id)),
                 "score": votable.get_score(),
                 "request": request,
                 }
     else:
-        return {}
+        return {"score":votable.get_score()}

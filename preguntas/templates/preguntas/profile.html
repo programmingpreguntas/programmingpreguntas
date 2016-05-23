@@ -1,13 +1,12 @@
 {% extends 'preguntas/base.html' %}
 {% block title%} {{usuario.user.username}}'s profile {% endblock %}
 {% block content %}
-  {% if user.is_authenticated %}
-    {% if user.usuario.id == usuario.id %}
-      <h2><span>Hello... {{usuario.name}}!</span></h2>
-    {% endif %}
-    <p>
-      Ask a <a href="{% url 'preguntas:new_question' %}">New Question</a>.
-    </p>
+
+  {% if user.is_authenticated and user.usuario.id == usuario.id %}
+    <span>Hello {{usuario.name}}!</span>
+    <p>You have {{ usuario.get_points }} points.</p>
+  {% else %}
+    <p>{{usuario.user.username}} has {{usuario.get_points}} points.</p>
   {% endif %}
   {% if question_set %}
     <div class="question_set">

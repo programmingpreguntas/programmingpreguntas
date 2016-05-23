@@ -20,7 +20,7 @@
         &#9776;
       </button>
       <div class="collapse navbar-toggleable-xs" id="exCollapsingNavbar2">
-          <h1 class="navbar-brand"><a href="{% url 'preguntas:questions' %}">Programing-Preguntas.com</a></h1>
+          <h1 class="navbar-brand"><a href="{% url 'preguntas:questions' %}">ProgramingPreguntas</a></h1>
           <form class="form-inline navbar-form pull-xs-right" id="searchBar" action="{%url 'preguntas:search'%}" method="get">
             <input class="form-control" type="text" name="q" value="Search Questions">
             <button class="btn btn-success-outline" type="submit">Search</button>
@@ -35,6 +35,7 @@
             <ul style="list-style-type:none">
                 {% if user.is_authenticated %}
                   <li><a href="{% url 'preguntas:my_profile' %}">Profile</a></li>
+                  <li><a href="{% url 'preguntas:new_question' %}">New Question</a></li>
                   <li><a href="{% url 'preguntas:logout_user' %}">Logout</a></li>
                 {% else %}
                   <li><a href="{% url 'preguntas:login' %}">Login</a></li>
@@ -51,6 +52,6 @@
     </div>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
-
+      <!-- <script src="/static/preguntas/vote_button.js"></script> -->
   </body>
 </html>

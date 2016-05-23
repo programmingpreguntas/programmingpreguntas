@@ -14,18 +14,25 @@ class Usuario(models.Model):
 
     def _get_votable_points(self, VotableType):
         my_votables = VotableType.objects.filter(owner=self)
-        votable_points = my_votables.annotate(points=Count('upvotes')).aggregate(sum=Sum('points'))['sum']
-        return votable_points
+        votable_up_points = my_votables.annotate(points=Count('upvotes')).aggregate(sum=Sum('points'))['sum']
+        votable_down_points = my_votables.annotate(points=Count('downvotes')).aggregate(sum=Sum('points'))['sum']
+        if votable_up_points is None:
+            votable_up_points = 0
+        if votable_down_points is None:
+            votable_down_points = 0
+        return votable_up_points - votable_down_points
 
     def get_points(self):
         question_points = self._get_votable_points(Question)
         answer_points = self._get_votable_points(Answer)
-        return question_points + answer_points
+        comment_point = self._get_votable_points(Comment)
+        return question_points + answer_points + comment_point
 
 
 class Comment(models.Model):
     body = models.TextField()
     upvotes = models.ManyToManyField(Usuario, related_name='comment_voted_up')
+    downvotes = models.ManyToManyField(Usuario, related_name='comment_voted_down')
     created = models.DateTimeField(auto_now_add=True)
     owner = models.ForeignKey(Usuario, on_delete=models.CASCADE)
 
@@ -44,10 +51,21 @@ class Comment(models.Model):
         else:
             return None
 
+    def get_score(self):
+        return self.upvotes.count() - self.downvotes.count()
+
+    def voted_down_by(self, usuario):
+        return self.downvotes.filter(id=usuario.id).exists()
+
+    def voted_up_by(self, usuario):
+        return self.upvotes.filter(id=usuario.id).exists()
+
+
 class Question(models.Model):
     title = models.CharField(max_length=255)
     body = models.TextField()
     upvotes = models.ManyToManyField(Usuario, related_name='question_voted_up')
+    downvotes = models.ManyToManyField(Usuario, related_name='question_voted_down')
     created = models.DateTimeField(auto_now_add=True)
     owner = models.ForeignKey(Usuario)
     comments = GenericRelation(Comment)
@@ -59,7 +77,10 @@ class Question(models.Model):
         return self.comments.all()
 
     def get_score(self):
-        return self.upvotes.count()
+        return self.upvotes.count() - self.downvotes.count()
+
+    def voted_down_by(self, usuario):
+        return self.downvotes.filter(id=usuario.id).exists()
 
     def voted_up_by(self, usuario):
         return self.upvotes.filter(id=usuario.id).exists()
@@ -68,6 +89,7 @@ class Question(models.Model):
 class Answer(models.Model):
     body = models.TextField()
     upvotes = models.ManyToManyField(Usuario, related_name='answer_voted_up')
+    downvotes = models.ManyToManyField(Usuario, related_name='answer_voted_down')
     created = models.DateTimeField(auto_now_add=True)
     owner = models.ForeignKey(Usuario)
     question = models.ForeignKey(Question)
@@ -83,7 +105,10 @@ class Answer(models.Model):
         return self.comments.all()
 
     def get_score(self):
-        return self.upvotes.count()
+        return self.upvotes.count() - self.downvotes.count()
+
+    def voted_down_by(self, usuario):
+        return self.downvotes.filter(id=usuario.id).exists()
 
     def voted_up_by(self, usuario):
         return self.upvotes.filter(id=usuario.id).exists()

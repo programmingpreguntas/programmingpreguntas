@@ -1,14 +1,24 @@
 {% if request.user.is_authenticated %}
-  <form class="" action="{%url "preguntas:vote"%}" method="post">
+  <form  action="{%url "preguntas:vote"%}" method="post">
     {% csrf_token %}
     <input type="hidden" name="votable_type" value="{{votable_type}}">
     <input type="hidden" name="votable_id" value="{{votable_id}}">
     <input type='hidden' name='this_url' value="{{request.get_full_path}}">
-    <input class="btn btn-sm {% if voted_up %} btn-success{% endif %}" type="submit" name="name" value="👍">
+    <input type="hidden" name="vote_direction" value="up">
+    <input id="{{votable_type}}-{{votable_id}}-up" class="voteButton upButton btn btn-sm {% if voted_up %} btn-success{% endif %}" type="submit" name="name" value="👍">
   </form>
-  <p>
+  <span id="{{votable_type}}-{{votable_id}}-score">
     {{score}}
-  </p>
+  </span>
+  <form action="{%url "preguntas:vote"%}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="votable_type" value="{{votable_type}}">
+    <input type="hidden" name="votable_id" value="{{votable_id}}">
+    <input type='hidden' name='this_url' value="{{request.get_full_path}}">
+    <input type="hidden" name="vote_direction" value="down">
+    <input id="{{votable_type}}-{{votable_id}}-up" class="voteButton downButton btn btn-sm {% if voted_down %} btn-danger{% endif %}" type="submit" name="name" value="👎">
+  </form>
+
 {%else%}
   <span>{{score}} points.</span>
 {% endif %}

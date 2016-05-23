@@ -2,10 +2,6 @@
 
 {% block content %}
 
-  {% if user.is_authenticated %}
-    <span>Ask a <a href="{% url 'preguntas:new_question' %}">New Question</a></span>
-  {% endif %}
-
   <h2>Most Recent Questions</h2>
   {% if question_list %}
     <ul>

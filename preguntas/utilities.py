@@ -1,6 +1,6 @@
 import random
 import string
-from .models import Question, Answer, Usuario
+from .models import Question, Answer, Usuario, Comment
 from django.contrib.auth.models import User
 from psycopg2 import IntegrityError as psyIntegrityError
 from django.db.utils import IntegrityError as djaIntegrityError
@@ -64,7 +64,7 @@ def make_random_questions():
 def make_random_answers():
     number_of_usuarios = Usuario.objects.count()
     for each_question in Question.objects.all():
-        for _ in range(random.randint(0, 25)):
+        for _ in range(random.randint(0, 10)):
             owner_index = random.randint(0, number_of_usuarios-1)
             try:
                 Answer(body=make_text(random.randint(25, 7500)),
@@ -74,19 +74,61 @@ def make_random_answers():
             except (psyIntegrityError, djaIntegrityError):
                 continue
 
+def make_random_comments():
+    number_of_usuarios = Usuario.objects.count()
+    for each_question in Question.objects.all():
+        for _ in range(random.randint(0, 7)):
+            owner_index = random.randint(0, number_of_usuarios-1)
+            try:
+                Comment(body=make_text(random.randint(25, 750)),
+                       content_object=get_parent_obj("Question",each_question.id),
+                       owner=Usuario.objects.all()[owner_index]
+                       ).save()
+            except (psyIntegrityError, djaIntegrityError):
+                continue
+    for each_answer in Answer.objects.all():
+        for _ in range(random.randint(0, 7)):
+            owner_index = random.randint(0, number_of_usuarios-1)
+            try:
+                Comment(body=make_text(random.randint(25, 750)),
+                       content_object=get_parent_obj("Answer",each_answer.id),
+                       owner=Usuario.objects.all()[owner_index]
+                       ).save()
+            except (psyIntegrityError, djaIntegrityError):
+                continue
 
 def make_random_votes():
     number_of_questions = Question.objects.count()
     number_of_answers = Answer.objects.count()
+    number_of_comments = Comment.objects.count()
     for each_usuario in Usuario.objects.all():
         for _ in range(random.randint(0, 50)):
             this_question_index = random.randint(0, number_of_questions-1)
             this_question = Question.objects.all()[this_question_index]
             this_question.upvotes.add(each_usuario)
-        for _ in range(random.randint(0, 200)):
+        for _ in range(random.randint(0, 25)):
+            this_question_index = random.randint(0, number_of_questions-1)
+            this_question = Question.objects.all()[this_question_index]
+            if not this_question.upvotes.filter(id=each_usuario.id).exists():
+                this_question.downvotes.add(each_usuario)
+        for _ in range(random.randint(0, 20)):
             this_answer_index = random.randint(0, number_of_answers-1)
             this_answer = Answer.objects.all()[this_answer_index]
             this_answer.upvotes.add(each_usuario)
+        for _ in range(random.randint(0, 10)):
+            this_answer_index = random.randint(0, number_of_answers-1)
+            this_answer = Answer.objects.all()[this_answer_index]
+            if not this_answer.upvotes.filter(id=each_usuario.id).exists():
+                this_answer.downvotes.add(each_usuario)
+        for _ in range(random.randint(0, 50)):
+            this_comment_index = random.randint(0, number_of_comments-1)
+            this_comment = Comment.objects.all()[this_comment_index]
+            this_comment.upvotes.add(each_usuario)
+        for _ in range(random.randint(0, 25)):
+            this_comment_index = random.randint(0, number_of_comments-1)
+            this_comment = Comment.objects.all()[this_comment_index]
+            if not this_comment.upvotes.filter(id=each_usuario.id).exists():
+                this_comment.downvotes.add(each_usuario)
 
 
 def make_random_data():
@@ -98,6 +140,8 @@ def make_random_data():
     make_random_questions()
     print("Getting Answers")
     make_random_answers()
+    print("Commenting")
+    make_random_comments()
     print("Voting")
     make_random_votes()
 
