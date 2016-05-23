@@ -9,44 +9,47 @@
     <title>{% block title %} Programming Preguntas{% endblock%}</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+    <link rel="stylesheet" href="/static/preguntas/style.css" media="screen" title="no title" charset="utf-8">
     <!-- Make Room for NavBar -->
-    <style>
-      body{
-        padding-top: 70px
-      }
-    </style>
+
   </head>
   <body>
+
     <nav class="navbar navbar-fixed-top navbar-light bg-faded">
-      <a class="navbar-brand" href="{% url 'preguntas:questions' %}">ProgramingPreguntas</a>
-      <ul class="nav navbar-nav">
-
-        {% if user.is_authenticated %}
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'preguntas:my_profile' %}">Profile</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'preguntas:logout_user' %}">Logout</a>
-          </li>
-        {% else %}
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'preguntas:login' %}">Login</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'preguntas:register_user' %}">Register</a>
-          </li>
-        {% endif %}
-
-      </ul>
-      <form class="form-inline navbar-form pull-xs-right" id="searchBar" action="{%url 'preguntas:search'%}" method="get">
-        <input class="form-control" type="text" name="q" value="Search Questions">
-        <button class="btn btn-success-outline" type="submit">Search</button>
-      </form>
+      <button class="navbar-toggler hidden-sm-up" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2">
+        &#9776;
+      </button>
+      <div class="collapse navbar-toggleable-xs" id="exCollapsingNavbar2">
+          <h1 class="navbar-brand"><a href="{% url 'preguntas:questions' %}">Programing-Preguntas.com</a></h1>
+          <form class="form-inline navbar-form pull-xs-right" id="searchBar" action="{%url 'preguntas:search'%}" method="get">
+            <input class="form-control" type="text" name="q" value="Search Questions">
+            <button class="btn btn-success-outline" type="submit">Search</button>
+          </form>
+      </div>
     </nav>
-    {% block content %}
-    {% endblock %}
-    <!-- jQuery first, then Bootstrap JS. -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
+    <div id="page">
+      <div class="container">
+        <div class="row">
+          <div id='sidebar' class="col-md-2">
+            {% block sidebar %}
+            <ul style="list-style-type:none">
+                {% if user.is_authenticated %}
+                  <li><a href="{% url 'preguntas:my_profile' %}">Profile</a></li>
+                  <li><a href="{% url 'preguntas:logout_user' %}">Logout</a></li>
+                {% else %}
+                  <li><a href="{% url 'preguntas:login' %}">Login</a></li>
+                  <li><a href="{% url 'preguntas:register_user' %}">Register</a></li>
+                {% endif %}
+            </ul>
+            {% endblock %}
+          </div>
+          <div id='content' class="col-md-8">
+            {% block content %}{% endblock %}
+          </div>
+        </div>
+      </div>
+    </div>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
   </body>
 </html>

@@ -8,13 +8,16 @@
 
 	<form action="{% url 'preguntas:auth_view' %}" method="post"> {% csrf_token %}
 
-		<label for="username">username:</label>
+		<label for="username"> - Username:</label>
+
 		<input type="text" name="username" value="" id="username" /><br />
 
-		<label for="username">password:</label>
+		<label for="username"> - Password:</label>
 		<input type="password" name="password" value="" id="password"/><br />
 
-		<input type="submit" value="Log In"/>
+		<input class="btn btn-primary" type="submit" value="Log in">
+
+		<!-- <input type="submit" value="Log In"/> -->
 	</form>
 
 {% endblock %}

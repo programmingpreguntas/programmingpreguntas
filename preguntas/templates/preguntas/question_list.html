@@ -1,14 +1,16 @@
 {% extends 'preguntas/base.html' %}
 
 {% block content %}
+
   {% if user.is_authenticated %}
     <span>Ask a <a href="{% url 'preguntas:new_question' %}">New Question</a></span>
   {% endif %}
+
   <h2>Most Recent Questions</h2>
   {% if question_list %}
     <ul>
       {% for question in question_list %}
-        <li> <a href="{%url 'preguntas:question' question.id%}">{{ question }}</a></li>
+        <li> <a href="{%url 'preguntas:question' question.id%}">{{ question|lower|truncatewords:'10'}}</a></li>
       {% endfor %}
     </ul>
     <span class="step-links">
@@ -25,4 +27,5 @@
   {% else %}
     <p>No questions are available</p>
   {% endif %}
+
 {% endblock %}

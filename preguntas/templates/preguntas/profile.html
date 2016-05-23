@@ -3,7 +3,7 @@
 {% block content %}
   {% if user.is_authenticated %}
     {% if user.usuario.id == usuario.id %}
-      <span>Hello {{usuario.name}}!</span>
+      <h2><span>Hello... {{usuario.name}}!</span></h2>
     {% endif %}
     <p>
       Ask a <a href="{% url 'preguntas:new_question' %}">New Question</a>.
@@ -27,7 +27,7 @@
       <ul>
         {% for answer in questions_answered_set %}
           {% with answer_question_id=answer.question_id %}
-            <li><a href="{%url 'preguntas:question' answer.question_id%}">{{answer.question.title}}</a></li>
+            <li><a href="{%url 'preguntas:question' answer.question_id%}">{{answer.question.title|lower|truncatewords:'10'}}</a></li>
           {% endwith %}
         {% endfor %}
       </ul>
