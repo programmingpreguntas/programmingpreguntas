@@ -1,43 +1,17 @@
-# Heroku Django Starter Template
+# Programming Preguntas
 
-An utterly fantastic project starter template for Django 1.9.
+¡Bienvenidos amigos a Programming Preguntas! This website lets registered users ask questions, answer questions, comment on posts and vote up excellent questions, answers, and comments.
 
-## Features
+This project uses Python3, Django, and PostgreSQL.
 
-- Production-ready configuration for Static Files, Database Settings, Gunicorn, etc.
-- Enhancements to Django's static file serving functionality via WhiteNoise
+## Installation
+- (Recommended) Set up a virtual environment for this project. If you use virtualenv, the command would be `echo "layout python3" >> .envrc`. You will need to follow up that command with `direnv allow`.
+- Ensure that [PostgreSQL is installed](http://www.postgresql.org/download/) (we use [Postgres.app](http://postgresapp.com/) on OS X). Create the database you wish to use with this project.
+- Clone this git repository: `git clone https://github.com/programmingpreguntas/programmingpreguntas.git`
+- Run `pip install -r requirements.txt`
+- [Set an environment variable for your database.](https://devcenter.heroku.com/articles/heroku-postgresql#local-setup) Run `export DATABASE_URL=postgres:///DATABASE_NAME` where DATABASE_NAME is the name of your local database. Add that line to your bash profile if you wish the environment variable to be loaded in every session.
+- Run `python manage.py migrate` to tell Django to set up its tables in the database.
 
 ## How to Use
-
-To use this project, follow these steps:
-
-1. Create your working environment.
-2. Install Django (`$ pip install django`)
-3. Create a new project using this template
-
-## Creating Your Project
-
-Using this template to create a new Django app is easy::
-
-    $ django-admin.py startproject --template=https://github.com/heroku/heroku-django-template/archive/master.zip --name=Procfile helloworld
-
-You can replace ``helloworld`` with your desired project name.
-
-## Deployment to Heroku
-
-    $ git init
-    $ git add -A
-    $ git commit -m "Initial commit"
-
-    $ heroku create
-    $ git push heroku master
-
-    $ heroku run python manage.py migrate
-
-See also, a [ready-made application](https://github.com/heroku/python-getting-started), ready to deploy.
-
-## Further Reading
-
-- [Gunicorn](https://warehouse.python.org/project/gunicorn/)
-- [WhiteNoise](https://warehouse.python.org/project/whitenoise/)
-- [dj-database-url](https://warehouse.python.org/project/dj-database-url/)
+- Run `python manage.py runserver` to start the webserver.
+- Navigate to [127.0.0.1:8000](http://127.0.0.1:8000) to view the app.

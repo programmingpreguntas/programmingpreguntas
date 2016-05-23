@@ -43,7 +43,7 @@ INSTALLED_APPS = (
 )
 
 REST_FRAMEWORK = {
-    # 'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAdminUser',),
+    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAdminUser',),
     'PAGE_SIZE': 10
 }
 
@@ -89,10 +89,10 @@ DATABASES = {
 
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        # 'NAME': 'mjoneill',
-        # 'USER': 'mjoneill',
-        'NAME': 'Pipita',
-        'USER': 'question_box',
+        'NAME': 'mjoneill',
+        'USER': 'mjoneill',
+        # 'NAME': 'Pipita',
+        # 'USER': 'question_box',
         'PASSWORD': '',
         'HOST': '127.0.0.1',
         'PORT': '5432',
