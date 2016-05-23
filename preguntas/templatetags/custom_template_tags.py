@@ -14,4 +14,4 @@ def vote_buttons(votable, request):
                 "request": request,
                 }
     else:
-        return {}
+        return {"score":votable.get_score()}

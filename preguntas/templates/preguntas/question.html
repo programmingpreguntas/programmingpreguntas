@@ -6,9 +6,6 @@
     Question # {{question.id}}
   </p>
   <p>
-    Points: {{question.get_score}}
-  </p>
-  <p>
     <h2>Title: {{question.title}}</h2>
   </p>
   <p>
@@ -55,6 +52,9 @@
       <p>
         By <a href="/profile/{{answer.owner_id}}">{{answer.owner.user.username}}</a> on {{answer.created}}
       </p>
+      <p>
+        {%vote_buttons answer request%}
+      </p>
       {% if answer.get_comments %}
         <p>
           <h3>Comments</h3>
@@ -78,9 +78,6 @@
           {% endwith %}              <!-- By <a href="{% url 'preguntas:profile' answer.owner.id%}">{{answer.owner}}</a> on {{answer.created}}. -->
         </p>
       {% endif %}
-      <p>
-        {%vote_buttons answer request%}
-      </p>
       <hr>
     {% endfor %}
   {% endif %}

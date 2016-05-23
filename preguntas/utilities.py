@@ -64,7 +64,7 @@ def make_random_questions():
 def make_random_answers():
     number_of_usuarios = Usuario.objects.count()
     for each_question in Question.objects.all():
-        for _ in range(random.randint(0, 25)):
+        for _ in range(random.randint(0, 10)):
             owner_index = random.randint(0, number_of_usuarios-1)
             try:
                 Answer(body=make_text(random.randint(25, 7500)),
